@@ -1,0 +1,21 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "main": "mqtt-test.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon ./index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "3.1.9"
+  },
+  "dependencies": {
+    "express": "4.21.2",
+    "mqtt": "5.10.3",
+    "mysql": "2.18.1"
+  }
+}
