@@ -2,7 +2,7 @@
 
     define("SERVIDOR","localhost");
 
-    define("DATABASE","logintestdb");
+    define("DATABASE","acuamet_db");
 
     define("USERNAME","root");
 

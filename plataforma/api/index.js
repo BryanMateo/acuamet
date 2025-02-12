@@ -1,6 +1,8 @@
 console.clear();
 
+//                              servidor express http
 import createExpressServer from 'express';
+
 const PORT = 3000;
 const expressApp = createExpressServer();
 
@@ -9,33 +11,49 @@ expressApp.listen(PORT, () =>
 
 );
 
-//mysql
+
+
+//                              mysql
 import mysql from 'mysql';
 
-var con = mysql.createConnection({
+var db = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "",
-    database: "mydb"
+    database: "acuamet_db"
 });
-//mysql
-
-//mqtt
-import mqtt from 'mqtt';
-const client = mqtt.connect("mqtt://test.mosquitto.org");
-//mqtt
 
 //conectarse a base de datos
-con.connect(function (err) {
+db.connect(function (err) {
     if (err) throw err;
     console.log("Conectado a la base de datos");
 });
 
+
+
+//                              mqtt
+import mqtt from 'mqtt';
+const mqttclient = mqtt.connect("mqtt://test.mosquitto.org");
+
 //Suscribirse a topico mqtt
-client.on("connect", () => {
-    client.subscribe("acuamet_mqtt", (err) => {
+mqttclient.on("connect", () => {
+    mqttclient.subscribe("acuamet_mqtt/#", (err) => {
         if (!err) {
             console.log("Suscrito a topico mqtt");
         }
     });
 });
+ 
+
+mqttclient.on("message", (topic, message) => {
+    //console.log('Topico: ', topic.toString(), 'Mensaje:', message.toString());
+    let strMessage = message.toString();
+    let objMessage = JSON.parse(message);
+    console.log(strMessage);
+
+    // if (topic === "acuamet_mqtt/consola_cliente") {
+    //     console.log("topico correcto");
+    // } else console.log("topico incorrecto");
+    
+})
+ 

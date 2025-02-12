@@ -1,0 +1,16 @@
+[
+    {
+    "id" : "id-generado-micro",
+    "cliente_id": "id de cliente asociado",
+    "ver": "version-del-codigo"
+},
+
+{
+    "id": "id-generado-micro",
+    "cliente_id": "id de cliente asociado",
+    "apt": "apto asociado a la metrica",
+    "consumo": "apto asociado a la metrica",
+    "fecha": "fecha actual"
+}
+
+]
