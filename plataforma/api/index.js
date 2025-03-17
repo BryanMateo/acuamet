@@ -48,7 +48,7 @@ mqttclient.on("connect", () => {
 mqttclient.on("message", (topic, message) => {
     //console.log('Topico: ', topic.toString(), 'Mensaje:', message.toString());
     let strMessage = message.toString();
-    let objMessage = JSON.parse(message);
+    //let objMessage = JSON.parse(message);
     console.log(strMessage);
 
     // if (topic === "acuamet_mqtt/consola_cliente") {

@@ -1,2 +1,5 @@
 plataforma/api/node_modules
 plataforma/api/.env
+cliente-micro/acuamet-cliente-esp32/.devcontainer
+cliente-micro/acuamet-cliente-esp32/.vscode
+cliente-micro/acuamet-cliente-esp32/build
