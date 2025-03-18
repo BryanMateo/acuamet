@@ -2,7 +2,7 @@
 
 const char *TAG = "cliente_acuamet";
 
-void fsmTask(void *pvParameters) 
+void fsmTask(void *pvParameters)
 {
     while (1)
     {
@@ -50,21 +50,6 @@ void fsmTask(void *pvParameters)
 
 void app_main(void)
 {
-    esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
-    {
-        nvs_flash_erase();
-        nvs_flash_init();
-    }
-
-    esp_netif_init();
-    esp_event_loop_create_default();
-    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
-    esp_wifi_init(&cfg);
-
-    obtener_mac();
-    // ESP_LOGW(TAG, "Inicializando Wi-Fi...");
-    // wifi_init_sta();
 
     xTaskCreate(
         fsmTask,
@@ -73,14 +58,4 @@ void app_main(void)
         NULL,
         5,
         NULL);
-
-    // Iniciar MQTT
-
-    // while (1)
-    // {
-        
-
-    //     // ESP_LOGI(TAG, "Test");
-    //     vTaskDelay(pdMS_TO_TICKS(1000));
-    // }
 }

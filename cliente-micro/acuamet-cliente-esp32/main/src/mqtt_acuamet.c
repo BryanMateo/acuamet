@@ -1,8 +1,9 @@
 #include "mqtt_acuamet.h"
 
 char root_topic[22] = "";
-
 char client_info_topic[28] = "";
+
+bool mqtt_connected = false;
 
 static void mqtt5_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data)
 {
@@ -14,6 +15,11 @@ static void mqtt5_event_handler(void *handler_args, esp_event_base_t base, int32
 
     case MQTT_EVENT_CONNECTED:
         esp_mqtt_client_subscribe(client, "/2022-1151/SPP", 1);
+        mqtt_connected = true;
+        break;
+
+    case MQTT_EVENT_DISCONNECTED:
+        mqtt_connected = false;
         break;
 
     case MQTT_EVENT_DATA:

@@ -2,10 +2,9 @@
 
 void gpio_init(void)
 {
-    //entradas
+    // entradas
     gpio_set_direction(configPin, GPIO_MODE_INPUT);
     gpio_set_pull_mode(configPin, GPIO_PULLUP_ONLY);
 
-    //salidas
-
+    // salidas
 }

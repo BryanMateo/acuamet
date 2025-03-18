@@ -16,9 +16,7 @@ extern bool wifi_connected;
 
 bool nvs_init();
 void config();
-
 void wifi_init_sta();
-
 void obtener_mac();
 
 #endif

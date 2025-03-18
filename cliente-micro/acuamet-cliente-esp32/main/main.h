@@ -30,5 +30,4 @@
 
 extern const char *TAG;
 
-
 #endif

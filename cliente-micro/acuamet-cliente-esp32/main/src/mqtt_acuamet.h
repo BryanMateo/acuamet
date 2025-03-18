@@ -4,8 +4,8 @@
 
 #define CONFIG_BROKER_URL "mqtt://test.mosquitto.org"
 
+extern bool mqtt_connected;
+
 void mqtt5_app_start();
-
-
 
 #endif
