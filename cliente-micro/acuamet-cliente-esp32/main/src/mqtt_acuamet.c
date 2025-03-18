@@ -1,28 +1,25 @@
-#include <stdio.h>
-
-#include "../main.h"
 #include "mqtt_acuamet.h"
 
-#include "mqtt_client.h"
-#include "esp_event.h"
-#include "esp_log.h"
-#include "cJSON.h"
-
 char root_topic[22] = "";
-
 char client_info_topic[28] = "";
+
+bool mqtt_connected = false;
 
 static void mqtt5_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data)
 {
     esp_mqtt_event_handle_t event = event_data;
     esp_mqtt_client_handle_t client = event->client;
-    int msg_id;
 
     switch ((esp_mqtt_event_id_t)event_id)
     {
 
     case MQTT_EVENT_CONNECTED:
-        msg_id = esp_mqtt_client_subscribe(client, "/2022-1151/SPP", 1);
+        esp_mqtt_client_subscribe(client, "/2022-1151/SPP", 1);
+        mqtt_connected = true;
+        break;
+
+    case MQTT_EVENT_DISCONNECTED:
+        mqtt_connected = false;
         break;
 
     case MQTT_EVENT_DATA:

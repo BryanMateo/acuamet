@@ -1,0 +1,30 @@
+#ifndef FSM_H
+#define FSM_H
+#include "../main.h"
+
+// estados
+#define EST_INIT 0
+#define EST_CONFIG 1
+#define EST_WIFICONN 2
+#define EST_MQTTCONN 3
+#define EST_LECTSENSMQTT 4
+#define EST_SALIDAS 5
+#define EST_PUBMQTT 6
+#define EST_ERROR 7
+
+#define delayEstados 100
+
+extern int ESTADO_SIGUIENTE;
+extern int ESTADO_ACTUAL;
+extern int ESTADO_ANTERIOR;
+
+int fun_init();
+int fun_config();
+int fun_wificonn();
+int fun_mqttconn();
+int fun_lectsensmqtt();
+int fun_salidas();
+int fun_pubmqtt();
+int fun_error();
+
+#endif
