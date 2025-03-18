@@ -1,26 +1,34 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-// Definición de pines
-#define PIN_LED 2
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+#include "src/fsm.h"
+#include "src/wifi_acuamet.h"
+#include "src/mqtt_acuamet.h"
+#include "src/gpio_config.h"
 
-// Definición de parámetros generales
-#define TIEMPO_ESPERA 1000 // Tiempo en milisegundos
-#define UMBRAL_SENSOR 500  // Valor umbral para el sensor
+// Librerias esp
+#include "esp_log.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "freertos/event_groups.h"
+#include "nvs.h"
+#include "nvs_flash.h"
+#include "esp_err.h"
+#include "esp_mac.h"
+#include "cJSON.h"
+#include "esp_netif.h"
+#include "esp_event.h"
+#include "driver/gpio.h"
+#include "esp_log.h"
+#include "esp_http_server.h"
+#include "esp_system.h"
+#include "esp_wifi.h"
+#include "mqtt_client.h"
 
-// wifi
-// #define WIFI_SSID "Nexxt"
-// #define WIFI_PASSWORD "ab123456cd"
-#define WIFI_CONNECTED_BIT BIT0
-#define WIFI_FAIL_BIT BIT1
+extern const char *TAG;
 
-// mqtt
-
-
-
-
-static const char *TAG = "cliente_acuamet";
-extern char mac_end[5];
-extern uint8_t mac[6];
 
 #endif

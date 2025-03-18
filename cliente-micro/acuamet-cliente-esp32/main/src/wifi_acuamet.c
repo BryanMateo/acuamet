@@ -1,19 +1,9 @@
-#include <stdio.h>
-#include <string.h>
-
-#include "../main.h"
 #include "wifi_acuamet.h"
-#include "mqtt_acuamet.h"
 
-#include "esp_system.h"
-#include "esp_log.h"
-#include "esp_wifi.h"
-#include "esp_netif.h"
-#include "esp_http_server.h"
-#include "esp_event.h"
-#include "nvs.h"
-#include "nvs_flash.h"
-#include "driver/gpio.h"
+char ssid[32] = {0}, password[32] = {0};
+char mac_end[5] = "";
+uint8_t mac[6] = "";
+bool wifi_connected = false;
 
 /*
 static EventGroupHandle_t wifi_event_group;
@@ -104,12 +94,14 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t e
         ESP_LOGI(TAG, "Conexión fallida, intentando reconectar...");
         esp_wifi_connect();
         xEventGroupClearBits(wifi_event_group, WIFI_CONNECTED_BIT);
+        wifi_connected = false;
     }
     else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP)
     {
         ip_event_got_ip_t *event = (ip_event_got_ip_t *)event_data;
         ESP_LOGI(TAG, "Conectado con IP:" IPSTR, IP2STR(&event->ip_info.ip));
         xEventGroupSetBits(wifi_event_group, WIFI_CONNECTED_BIT);
+        wifi_connected = true;
     }
 }
 
@@ -223,7 +215,7 @@ esp_err_t wifi_post_handler(httpd_req_t *req)
     const char *resp_str = "<html><body><h2>Credenciales guardadas. Reiniciando...</h2></body></html>";
     httpd_resp_send(req, resp_str, HTTPD_RESP_USE_STRLEN);
 
-    vTaskDelay(2000 / portTICK_PERIOD_MS);
+    vTaskDelay(3000 / portTICK_PERIOD_MS);
     esp_restart();
     return ESP_OK;
 }
@@ -272,6 +264,7 @@ void start_softap()
     esp_wifi_start();
 
     ESP_LOGI(TAG, "SoftAP iniciado: SSID=%s, IP=192.168.4.1", ap_ssid);
+    return;
 }
 
 void start_wifi_sta(const char *ssid, const char *password)
@@ -317,36 +310,39 @@ void start_wifi_sta(const char *ssid, const char *password)
     }
 }
 
+bool nvs_init(void)
+{
+    if (get_wifi_credentials(ssid, password, sizeof(ssid)))
+        return true;
+    else
+        return false;
+}
+
+void config(void)
+{
+    ESP_LOGW(TAG, "Inicializando AP");
+    start_softap();
+    ESP_LOGW(TAG, "Inicializando WS");
+    start_webserver();
+}
+
 void wifi_init_sta(void)
 {
-    esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
-    {
-        nvs_flash_erase();
-        nvs_flash_init();
-    }
-
-    esp_netif_init();
-    esp_event_loop_create_default();
-
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     esp_wifi_init(&cfg);
+    start_wifi_sta(ssid, password);
+}
 
-    gpio_set_direction(configPin, GPIO_MODE_INPUT);
-    gpio_set_pull_mode(configPin, GPIO_PULLUP_ONLY);
-
-    char ssid[32] = {0}, password[32] = {0};
-    bool has_credentials = get_wifi_credentials(ssid, password, sizeof(ssid));
-
-    if (gpio_get_level(configPin) == 0 || !has_credentials)
+void obtener_mac(void)
+{
+    esp_err_t err = esp_efuse_mac_get_default(mac);
+    if (err == ESP_OK)
     {
-        ESP_LOGW(TAG, "Config MODE"); // modo configuracion si no hay wifi guardado o si esta el pin 13 a tierra
-        start_softap();
-        start_webserver();
+        snprintf(mac_end, sizeof(mac_end), "%02X%02X", mac[4], mac[5]);
+        // printf("mac = %s", mac_end);
     }
     else
     {
-        start_wifi_sta(ssid, password); // Conectarse al wifi
-        mqtt5_app_start();
+        printf("Error MAC: %s\n", esp_err_to_name(err));
     }
 }
