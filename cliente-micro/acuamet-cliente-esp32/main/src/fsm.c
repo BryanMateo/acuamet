@@ -94,8 +94,11 @@ int fun_lectsensmqtt(void)
     while (1)
     {
         // if (wifi_connected)
+        float litros_flujo_1 = (float)pulsos_flujo_1 / constante_ppl_flujometro;
+        ESP_LOGW(TAG, "Litros Flujometro 1 = %.2f", litros_flujo_1);
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
 
-        vTaskDelay(delayEstados / portTICK_PERIOD_MS);
+        // vTaskDelay(delayEstados / portTICK_PERIOD_MS);
     }
 }
 

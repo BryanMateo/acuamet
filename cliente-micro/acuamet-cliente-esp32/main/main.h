@@ -28,6 +28,8 @@
 #include "esp_wifi.h"
 #include "mqtt_client.h"
 
+#define constante_ppl_flujometro 450
+
 extern const char *TAG;
 
 #endif
