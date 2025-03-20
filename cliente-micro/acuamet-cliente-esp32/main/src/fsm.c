@@ -4,7 +4,7 @@ int ESTADO_SIGUIENTE = EST_INIT;
 int ESTADO_ACTUAL = EST_INIT;
 int ESTADO_ANTERIOR = EST_INIT;
 
-float litros_flujo_1 = 0;
+
 
 int fun_init(void)
 {
@@ -95,13 +95,13 @@ int fun_lectsensmqtt(void)
     while (1)
     {
         // if (wifi_connected)
-        pcnt_get_counter_value(PCNT_UNIT_0, (int16_t *)&pulsos_flujo_1);
-        if (pulsos_flujo_1 > 0)
-        {
-            pcnt_counter_clear(PCNT_UNIT_0);
-        }
-        litros_flujo_1 += (float)pulsos_flujo_1 / constante_ppl_flujometro;
-        ESP_LOGW(TAG, "Litros Flujometro 1 = %.2f", litros_flujo_1);
+        // pcnt_get_counter_value(PCNT_UNIT_0, (int16_t *)&pulsos_flujo_1);
+        // if (pulsos_flujo_1 > 0)
+        // {
+        //     pcnt_counter_clear(PCNT_UNIT_0);
+        // }
+        // litros_flujo_1 += (float)pulsos_flujo_1 / constante_ppl_flujometro;
+        // ESP_LOGW(TAG, "Litros Flujometro 1 = %.2f", litros_flujo_1);
         vTaskDelay(1000 / portTICK_PERIOD_MS);
 
         // vTaskDelay(delayEstados / portTICK_PERIOD_MS);

@@ -506,7 +506,7 @@ CONFIG_ADC_CAL_LUT_ENABLE=y
 #
 # Legacy PCNT Driver Configurations
 #
-# CONFIG_PCNT_SUPPRESS_DEPRECATE_WARN is not set
+CONFIG_PCNT_SUPPRESS_DEPRECATE_WARN=y
 # end of Legacy PCNT Driver Configurations
 
 #

@@ -8,6 +8,7 @@
 #include "src/wifi_acuamet.h"
 #include "src/mqtt_acuamet.h"
 #include "src/gpio_config.h"
+#include "src/contador_pulsos.h"
 
 // Librerias esp
 #include "esp_log.h"
@@ -30,7 +31,7 @@
 #include "driver/pcnt.h"
 
 #define constante_ppl_flujometro 450
-
+#define delay_lectura_flujometros 1000
 extern const char *TAG;
 
 #endif

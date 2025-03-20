@@ -48,15 +48,40 @@ void fsmTask(void *pvParameters)
     }
 }
 
+float litros_flujo_1 = 0;
+
+void flujometrosTask(void *pvParameters)
+{
+    while (1)
+    {
+        pcnt_get_counter_value(PCNT_UNIT_0, (int16_t *)&pulsos_flujo_1);
+        if (pulsos_flujo_1 > 0)
+        {
+            pcnt_counter_clear(PCNT_UNIT_0);
+        }
+        litros_flujo_1 += (float)pulsos_flujo_1 / constante_ppl_flujometro;
+        ESP_LOGW(TAG, "Litros Flujometro 1 = %.2f", litros_flujo_1);
+
+        vTaskDelay(pdMS_TO_TICKS(delay_lectura_flujometros));
+    }
+}
+
 void app_main(void)
 {
 
     xTaskCreate(
         fsmTask,
-        "FSMtask",
+        "fsmTask",
         4096,
         NULL,
         5,
         NULL);
-        
+
+    xTaskCreate(
+        flujometrosTask,
+        "flujometrosTask",
+        2048,
+        NULL,
+        5,
+        NULL);
 }
