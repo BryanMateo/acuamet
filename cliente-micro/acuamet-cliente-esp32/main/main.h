@@ -27,6 +27,7 @@
 #include "esp_system.h"
 #include "esp_wifi.h"
 #include "mqtt_client.h"
+#include "driver/pcnt.h"
 
 #define constante_ppl_flujometro 450
 

@@ -4,8 +4,12 @@ int ESTADO_SIGUIENTE = EST_INIT;
 int ESTADO_ACTUAL = EST_INIT;
 int ESTADO_ANTERIOR = EST_INIT;
 
+float litros_flujo_1 = 0;
+
 int fun_init(void)
 {
+    gpio_init(); // Inicializar todos los GPIO
+    obtener_mac();
     ESP_LOGW(TAG, "Estado Init");
 
     esp_err_t ret = nvs_flash_init();
@@ -18,9 +22,6 @@ int fun_init(void)
     esp_event_loop_create_default();
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     esp_wifi_init(&cfg);
-
-    gpio_init(); // Inicializar todos los GPIO
-    obtener_mac();
 
     while (1)
     {
@@ -94,7 +95,12 @@ int fun_lectsensmqtt(void)
     while (1)
     {
         // if (wifi_connected)
-        float litros_flujo_1 = (float)pulsos_flujo_1 / constante_ppl_flujometro;
+        pcnt_get_counter_value(PCNT_UNIT_0, (int16_t *)&pulsos_flujo_1);
+        if (pulsos_flujo_1 > 0)
+        {
+            pcnt_counter_clear(PCNT_UNIT_0);
+        }
+        litros_flujo_1 += (float)pulsos_flujo_1 / constante_ppl_flujometro;
         ESP_LOGW(TAG, "Litros Flujometro 1 = %.2f", litros_flujo_1);
         vTaskDelay(1000 / portTICK_PERIOD_MS);
 
