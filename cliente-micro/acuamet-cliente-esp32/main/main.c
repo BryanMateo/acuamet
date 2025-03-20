@@ -2,6 +2,8 @@
 
 const char *TAG = "cliente_acuamet";
 
+float litros_flujo_1 = 0;
+
 void fsmTask(void *pvParameters)
 {
     while (1)
@@ -48,12 +50,11 @@ void fsmTask(void *pvParameters)
     }
 }
 
-float litros_flujo_1 = 0;
-
 void flujometrosTask(void *pvParameters)
 {
     while (1)
     {
+        uint32_t pulsos_flujo_1 = 0;
         pcnt_get_counter_value(PCNT_UNIT_0, (int16_t *)&pulsos_flujo_1);
         if (pulsos_flujo_1 > 0)
         {
@@ -68,7 +69,6 @@ void flujometrosTask(void *pvParameters)
 
 void app_main(void)
 {
-
     xTaskCreate(
         fsmTask,
         "fsmTask",

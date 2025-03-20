@@ -4,8 +4,6 @@ int ESTADO_SIGUIENTE = EST_INIT;
 int ESTADO_ACTUAL = EST_INIT;
 int ESTADO_ANTERIOR = EST_INIT;
 
-
-
 int fun_init(void)
 {
     gpio_init(); // Inicializar todos los GPIO
@@ -33,7 +31,7 @@ int fun_init(void)
         {
             return EST_WIFICONN;
         }
-        vTaskDelay(delayEstados / portTICK_PERIOD_MS);
+        vTaskDelay(pdMS_TO_TICKS(delay_estados));
     }
 }
 
@@ -46,7 +44,7 @@ int fun_config(void)
 
     while (1)
     {
-        vTaskDelay(delayEstados / portTICK_PERIOD_MS);
+        vTaskDelay(pdMS_TO_TICKS(delay_estados));
     }
 }
 
@@ -64,7 +62,7 @@ int fun_wificonn(void)
             return EST_MQTTCONN;
         }
 
-        vTaskDelay(delayEstados / portTICK_PERIOD_MS);
+        vTaskDelay(pdMS_TO_TICKS(delay_estados));
     }
 }
 
@@ -82,7 +80,7 @@ int fun_mqttconn(void)
             return EST_LECTSENSMQTT;
         }
 
-        vTaskDelay(delayEstados / portTICK_PERIOD_MS);
+        vTaskDelay(pdMS_TO_TICKS(delay_estados));
     }
 }
 
@@ -95,16 +93,8 @@ int fun_lectsensmqtt(void)
     while (1)
     {
         // if (wifi_connected)
-        // pcnt_get_counter_value(PCNT_UNIT_0, (int16_t *)&pulsos_flujo_1);
-        // if (pulsos_flujo_1 > 0)
-        // {
-        //     pcnt_counter_clear(PCNT_UNIT_0);
-        // }
-        // litros_flujo_1 += (float)pulsos_flujo_1 / constante_ppl_flujometro;
-        // ESP_LOGW(TAG, "Litros Flujometro 1 = %.2f", litros_flujo_1);
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
 
-        // vTaskDelay(delayEstados / portTICK_PERIOD_MS);
+        vTaskDelay(pdMS_TO_TICKS(delay_estados));
     }
 }
 
@@ -116,7 +106,7 @@ int fun_salidas(void)
 
     while (1)
     {
-        vTaskDelay(delayEstados / portTICK_PERIOD_MS);
+        vTaskDelay(pdMS_TO_TICKS(delay_estados));
     }
 }
 
@@ -128,7 +118,7 @@ int fun_pubmqtt(void)
 
     while (1)
     {
-        vTaskDelay(delayEstados / portTICK_PERIOD_MS);
+        vTaskDelay(pdMS_TO_TICKS(delay_estados));
     }
 }
 
@@ -140,6 +130,6 @@ int fun_error(void)
 
     while (1)
     {
-        vTaskDelay(delayEstados / portTICK_PERIOD_MS);
+        vTaskDelay(pdMS_TO_TICKS(delay_estados));
     }
 }

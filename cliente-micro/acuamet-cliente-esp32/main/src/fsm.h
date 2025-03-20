@@ -12,7 +12,7 @@
 #define EST_PUBMQTT 6
 #define EST_ERROR 7
 
-#define delayEstados 100
+#define delay_estados 100
 
 extern int ESTADO_SIGUIENTE;
 extern int ESTADO_ACTUAL;
