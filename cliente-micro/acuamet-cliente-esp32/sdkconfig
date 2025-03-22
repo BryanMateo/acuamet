@@ -488,7 +488,7 @@ CONFIG_ADC_CAL_LUT_ENABLE=y
 #
 # Legacy Timer Group Driver Configurations
 #
-# CONFIG_GPTIMER_SUPPRESS_DEPRECATE_WARN is not set
+CONFIG_GPTIMER_SUPPRESS_DEPRECATE_WARN=y
 # end of Legacy Timer Group Driver Configurations
 
 #

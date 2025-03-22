@@ -4,7 +4,7 @@ const char *TAG = "cliente_acuamet";
 
 float litros_flujo_1 = 0;
 
-void fsmTask(void *pvParameters)
+void fsm_task(void *pvParameters)
 {
     while (1)
     {
@@ -50,36 +50,70 @@ void fsmTask(void *pvParameters)
     }
 }
 
-void flujometrosTask(void *pvParameters)
+void sensores_task(void *pvParameters)
 {
     while (1)
     {
+        
         uint32_t pulsos_flujo_1 = 0;
+
         pcnt_get_counter_value(PCNT_UNIT_0, (int16_t *)&pulsos_flujo_1);
         if (pulsos_flujo_1 > 0)
         {
             pcnt_counter_clear(PCNT_UNIT_0);
         }
         litros_flujo_1 += (float)pulsos_flujo_1 / constante_ppl_flujometro;
-        ESP_LOGW(TAG, "Litros Flujometro 1 = %.2f", litros_flujo_1);
-
+        // ESP_LOGW(TAG, "Litros Flujometro 1 = %.2f", litros_flujo_1);
         vTaskDelay(pdMS_TO_TICKS(delay_lectura_flujometros));
     }
+}
+
+void nivel_cisterna_task (void *pvParameters)
+{
+    while (1)
+    {
+        int distancia = nivel_cisterna_distance();
+       
+        switch (distancia)
+        {
+        case SENS_ERR_RANGE:
+            ESP_LOGE(TAG, "Ultras. err rango");
+            break;
+        case SENS_ERR_TIMEOUT:
+            ESP_LOGE(TAG, "Ultras. timeout");
+            break;
+        default:
+            ESP_LOGI(TAG, "Distancia %icm", distancia);
+            break;
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(delay_lectura_cisterna));
+    }
+    
+
 }
 
 void app_main(void)
 {
     xTaskCreate(
-        fsmTask,
-        "fsmTask",
+        fsm_task,
+        "fsm",
         4096,
         NULL,
         5,
         NULL);
 
     xTaskCreate(
-        flujometrosTask,
-        "flujometrosTask",
+        sensores_task,
+        "sensores",
+        2048,
+        NULL,
+        5,
+        NULL);
+
+    xTaskCreate(
+    nivel_cisterna_task,
+        "Nivel cisterna",
         2048,
         NULL,
         5,
