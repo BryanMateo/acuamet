@@ -32,10 +32,13 @@
 #include "esp_rom_sys.h"
 #include "esp_timer.h"
 #include "driver/timer.h"
+#include "esp_adc/adc_oneshot.h"
+#include "esp_adc/adc_cali.h"
+#include "esp_adc/adc_cali_scheme.h"
 
 #define constante_ppl_flujometro 450
 #define delay_lectura_flujometros 1000
-#define delay_lectura_cisterna 1000 //5 minutos
+#define delay_lectura_cisterna 1000
 extern const char *TAG;
 
 #endif

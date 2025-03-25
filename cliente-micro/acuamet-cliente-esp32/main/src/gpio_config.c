@@ -38,6 +38,9 @@ void gpio_init(void)
     // Inicializar contador de pulsos por hardware para flujometro 1 en el pin designado en el header
     set_pin_pcnt(PCNT_UNIT_0, pin_flujometro_1); // cambiar a luego de que se haga la configuracion mas a delante
 
+    /* Sensor presion */
+    set_pin_presion(pin_sensor_presion);
+
     /* ENTRADAS */
     gpio_set_direction(configPin, GPIO_MODE_INPUT); // Pin config mode
     gpio_set_pull_mode(configPin, GPIO_PULLUP_ONLY);

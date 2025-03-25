@@ -64,6 +64,9 @@ void sensores_task(void *pvParameters)
         }
         litros_flujo_1 += (float)pulsos_flujo_1 / constante_ppl_flujometro;
         // ESP_LOGW(TAG, "Litros Flujometro 1 = %.2f", litros_flujo_1);
+        float presion = read_pin_presion();
+
+        printf("Presion = %.2fPSI \n", presion);
         vTaskDelay(pdMS_TO_TICKS(delay_lectura_flujometros));
     }
 }
@@ -119,3 +122,4 @@ void app_main(void)
         5,
         NULL);
 }
+
