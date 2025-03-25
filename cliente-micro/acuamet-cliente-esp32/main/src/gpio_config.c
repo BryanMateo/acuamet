@@ -1,5 +1,5 @@
 #include "gpio_config.h"
-
+bool gpio_inicializado = false;
 // Interrupciones
 
 void IRAM_ATTR pulso_interrupt(void *arg)
@@ -35,8 +35,11 @@ void gpio_init(void)
 
     // pines flujometros
 
-    // Inicializar contador de pulsos por hardware para flujometro 1 en el pin designado en el header
-    set_pin_pcnt(PCNT_UNIT_0, pin_flujometro_1); // cambiar a luego de que se haga la configuracion mas a delante
+    // Inicializar contador de pulsos por hardware para flujometro en el pin designado
+    set_pin_pcnt(pcnt_unit_flujo_1, pin_flujometro_1); // cambiar a luego de que se haga la configuracion mas a delante
+    set_pin_pcnt(pcnt_unit_flujo_2, pin_flujometro_2);
+    set_pin_pcnt(pcnt_unit_flujo_3, pin_flujometro_3);
+    set_pin_pcnt(pcnt_unit_flujo_4, pin_flujometro_4);
 
     /* Sensor presion */
     set_pin_presion(pin_sensor_presion);
@@ -47,4 +50,6 @@ void gpio_init(void)
 
     /* SALIDAS */
     gpio_set_direction(pin_ultrasonico_cisterna_trig, GPIO_MODE_OUTPUT); // pin trigger sensor nivel cisterna ultrasonico
+
+    gpio_inicializado = true;
 }

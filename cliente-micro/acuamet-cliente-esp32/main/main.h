@@ -36,9 +36,30 @@
 #include "esp_adc/adc_cali.h"
 #include "esp_adc/adc_cali_scheme.h"
 
-#define constante_ppl_flujometro 450
 #define delay_lectura_flujometros 1000
 #define delay_lectura_cisterna 1000
 extern const char *TAG;
+
+struct SENSORES
+{
+    int nivel_cisterna;
+    float presion;
+    float flujo_apt1;
+    float flujo_apt2;
+    float flujo_apt3;
+    float flujo_apt4;
+};
+
+struct SALIDA
+{
+    bool bomba;
+    bool valvula_apt1;
+    bool valvula_apt2;
+    bool valvula_apt3;
+    bool valvula_apt4;
+};
+
+extern struct SENSORES sensores;
+extern struct SALIDA salida;
 
 #endif

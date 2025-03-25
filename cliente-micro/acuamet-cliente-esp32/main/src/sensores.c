@@ -1,5 +1,6 @@
 #include "sensores.h"
 
+
 // flujometros
 void set_pin_pcnt(pcnt_unit_t unit, gpio_num_t pin) // funcion para declarar el contador y el pin del flujometro
 {
@@ -12,7 +13,7 @@ void set_pin_pcnt(pcnt_unit_t unit, gpio_num_t pin) // funcion para declarar el 
         .neg_mode = PCNT_COUNT_DIS,
         .lctrl_mode = PCNT_MODE_KEEP,
         .hctrl_mode = PCNT_MODE_KEEP,
-        .counter_h_lim = 23000,
+        .counter_h_lim = 30000,
         .counter_l_lim = 0,
     };
 
@@ -20,6 +21,19 @@ void set_pin_pcnt(pcnt_unit_t unit, gpio_num_t pin) // funcion para declarar el 
     pcnt_counter_pause(unit);
     pcnt_counter_clear(unit);
     pcnt_counter_resume(unit);
+}
+
+float calc_galon_flujo(pcnt_unit_t unit) // lee el contador del flujometro y devuelve los galones contados
+{
+    uint16_t pulsos_flujo = 0;
+    pcnt_get_counter_value(unit, (int16_t *)&pulsos_flujo);
+    if (pulsos_flujo > 0)
+    {
+        pcnt_counter_clear(unit);
+    }
+    float galones_flujo = (float)pulsos_flujo / constante_gpl_flujometro;
+
+    return galones_flujo;
 }
 
 // sensor ultrasonico nivel cisterna
@@ -98,7 +112,7 @@ float read_pin_presion(void)
 
     adc_oneshot_read(sensor_presion_handle, pin_sensor_presion, &adc_raw);
     adc_cali_raw_to_voltage(sensor_presion_cali_handle, adc_raw, &voltage_mv);
-   // printf("Lectura ADC: %i, Voltaje calibrado: %imV\n", adc_raw, voltage_mv);
+    // printf("Lectura ADC: %i, Voltaje calibrado: %imV\n", adc_raw, voltage_mv);
 
     if (voltage_mv > 367)
     {

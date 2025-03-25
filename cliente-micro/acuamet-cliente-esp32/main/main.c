@@ -2,7 +2,8 @@
 
 const char *TAG = "cliente_acuamet";
 
-float litros_flujo_1 = 0;
+struct SENSORES sensores;
+struct SALIDA salida;
 
 void fsm_task(void *pvParameters)
 {
@@ -50,34 +51,51 @@ void fsm_task(void *pvParameters)
     }
 }
 
-void sensores_task(void *pvParameters)
+void flujometros_task(void *pvParameters)
 {
+    sensores.flujo_apt1 = 0;
+    sensores.flujo_apt2 = 0;
+    sensores.flujo_apt3 = 0;
+    sensores.flujo_apt4 = 0;
+    sensores.presion = 0;
+
     while (1)
     {
-        
-        uint32_t pulsos_flujo_1 = 0;
-
-        pcnt_get_counter_value(PCNT_UNIT_0, (int16_t *)&pulsos_flujo_1);
-        if (pulsos_flujo_1 > 0)
+        if (gpio_inicializado) // espera a que todos los gpio se inicialicen
         {
-            pcnt_counter_clear(PCNT_UNIT_0);
-        }
-        litros_flujo_1 += (float)pulsos_flujo_1 / constante_ppl_flujometro;
-        // ESP_LOGW(TAG, "Litros Flujometro 1 = %.2f", litros_flujo_1);
-        float presion = read_pin_presion();
+            // uint32_t pulsos_flujo_1 = 0;
 
-        printf("Presion = %.2fPSI \n", presion);
+            // pcnt_get_counter_value(PCNT_UNIT_0, (int16_t *)&pulsos_flujo_1);
+            // if (pulsos_flujo_1 > 0)
+            // {
+            //     pcnt_counter_clear(PCNT_UNIT_0);
+            // }
+            // litros_flujo_1 += (float)pulsos_flujo_1 / constante_ppl_flujometro;
+            // ESP_LOGW(TAG, "Litros Flujometro 1 = %.2f", litros_flujo_1);
+
+            sensores.flujo_apt1 += calc_galon_flujo(pcnt_unit_flujo_1);
+            sensores.flujo_apt2 += calc_galon_flujo(pcnt_unit_flujo_2);
+            sensores.flujo_apt3 += calc_galon_flujo(pcnt_unit_flujo_3);
+            sensores.flujo_apt4 += calc_galon_flujo(pcnt_unit_flujo_4);
+
+            sensores.presion = read_pin_presion();
+
+            printf("1: %.2f 2: %.2f 3: %.2f 4: %.2f \n", sensores.flujo_apt1, sensores.flujo_apt2, sensores.flujo_apt3, sensores.flujo_apt4);
+            // printf("Presion = %.2fPSI \n", presion);
+        }
         vTaskDelay(pdMS_TO_TICKS(delay_lectura_flujometros));
     }
 }
 
-void nivel_cisterna_task (void *pvParameters)
+void nivel_cisterna_task(void *pvParameters)
 {
+    sensores.nivel_cisterna = 0;
+
     while (1)
     {
-        int distancia = nivel_cisterna_distance();
-       
-        switch (distancia)
+        sensores.nivel_cisterna = nivel_cisterna_distance();
+
+        switch (sensores.nivel_cisterna)
         {
         case SENS_ERR_RANGE:
             ESP_LOGE(TAG, "Ultras. err rango");
@@ -86,14 +104,12 @@ void nivel_cisterna_task (void *pvParameters)
             ESP_LOGE(TAG, "Ultras. timeout");
             break;
         default:
-            ESP_LOGI(TAG, "Distancia %icm", distancia);
+            ESP_LOGI(TAG, "Distancia %icm", sensores.nivel_cisterna);
             break;
         }
 
         vTaskDelay(pdMS_TO_TICKS(delay_lectura_cisterna));
     }
-    
-
 }
 
 void app_main(void)
@@ -107,19 +123,18 @@ void app_main(void)
         NULL);
 
     xTaskCreate(
-        sensores_task,
-        "sensores",
-        2048,
+        flujometros_task,
+        "flujometros",
+        4096,
         NULL,
         5,
         NULL);
 
     xTaskCreate(
-    nivel_cisterna_task,
+        nivel_cisterna_task,
         "Nivel cisterna",
-        2048,
+        4096,
         NULL,
         5,
         NULL);
 }
-
