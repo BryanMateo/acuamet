@@ -11,6 +11,7 @@
 #define pcnt_unit_flujo_4 PCNT_UNIT_3
 
 #define promedio_nivel_cisterna 10
+#define promedio_presion 10
 #define SENS_ERR_RANGE -1   // lectura del sensor fuera de rango
 #define SENS_ERR_TIMEOUT -2 // tiempo de espera agotado
 

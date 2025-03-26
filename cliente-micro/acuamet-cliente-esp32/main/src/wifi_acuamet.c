@@ -2,6 +2,7 @@
 
 char ssid[32] = {0}, password[32] = {0};
 char mac_end[5] = "";
+char mac_str[13] = "";
 uint8_t mac[6] = "";
 bool wifi_connected = false;
 
@@ -262,11 +263,12 @@ void obtener_mac(void)
     esp_err_t err = esp_efuse_mac_get_default(mac);
     if (err == ESP_OK)
     {
-        snprintf(mac_end, sizeof(mac_end), "%02X%02X", mac[4], mac[5]);
+        sprintf(mac_end, "%02X%02X", mac[4], mac[5]);
+        sprintf(mac_str, "%02X%02X%02X%02X%02X%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
         // printf("mac = %s", mac_end);
     }
     else
     {
-        printf("Error MAC: %s\n", esp_err_to_name(err));
+       // printf("Error MAC: %s\n", esp_err_to_name(err));
     }
 }

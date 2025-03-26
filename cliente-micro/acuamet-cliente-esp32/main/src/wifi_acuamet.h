@@ -10,6 +10,7 @@
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 extern char mac_end[5];
+extern char mac_str[13];
 extern uint8_t mac[6];
 extern char ssid[32], password[32];
 extern bool wifi_connected;

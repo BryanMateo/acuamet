@@ -1,7 +1,9 @@
 #include "mqtt_acuamet.h"
 
-char root_topic[22] = "";
-char client_info_topic[28] = "";
+char client_root_topic[22] = "";
+char client_id_topic[30] = "";
+char client_sensores_topic[36] = "";
+char client_control_topic[30] = "";
 
 bool mqtt_connected = false;
 
@@ -14,7 +16,7 @@ static void mqtt5_event_handler(void *handler_args, esp_event_base_t base, int32
     {
 
     case MQTT_EVENT_CONNECTED:
-        esp_mqtt_client_subscribe(client, "/2022-1151/SPP", 1);
+        esp_mqtt_client_subscribe(client, client_control_topic, 1);
         mqtt_connected = true;
         break;
 
@@ -24,15 +26,16 @@ static void mqtt5_event_handler(void *handler_args, esp_event_base_t base, int32
 
     case MQTT_EVENT_DATA:
 
-        if (strncmp(event->topic, "/2022-1151/SPP", event->topic_len) == 0)
+        if (strncmp(event->topic, client_control_topic, event->topic_len) == 0)
         {
-            char received_data[2]; // Solo esperamos "0" o "1"
-            snprintf(received_data, sizeof(received_data), "%.*s", event->data_len, event->data);
-            if (strcmp(received_data, "1") == 0)
-            {
-                // sppButtonMQTT = 1;
-                ESP_LOGI(TAG, "SPP");
-            }
+
+            // char received_data[2]; // Solo esperamos "0" o "1"
+            // snprintf(received_data, sizeof(received_data), "%.*s", event->data_len, event->data);
+            // if (strcmp(received_data, "1") == 0)
+            // {
+            //     // sppButtonMQTT = 1;
+            //     ESP_LOGI(TAG, "SPP");
+            // }
         }
         break;
 
@@ -48,25 +51,27 @@ static void mqtt5_event_handler(void *handler_args, esp_event_base_t base, int32
 
 void create_topics(void)
 {
-    snprintf(root_topic, sizeof(root_topic), "acuamet/%02X%02X%02X%02X%02X%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-    ESP_LOGW(TAG, "ROOT TOPIC: %s", root_topic);
-    sprintf(client_info_topic, "%s/info", root_topic);
-    ESP_LOGW(TAG, "TOPICO INFO: %s", client_info_topic);
+    sprintf(client_root_topic, "acuamet/%s", mac_str);                     // topico principal
+    sprintf(client_id_topic, "%s/info/id", client_root_topic);             // topico de informacion id solo PUB
+    sprintf(client_sensores_topic, "%s/info/sensores", client_root_topic); // topico de informacion sensores solo PUB
+    sprintf(client_control_topic, "%s/control", client_root_topic);        // topico de control solo SUB
+
+    // ESP_LOGW(TAG, "ROOT TOPIC: %s", client_root_topic);
+    // ESP_LOGW(TAG, "TOPICO INFO: %s", client_info_topic);
 }
 
-char *json()
+char *id_json()
 {
     cJSON *root = cJSON_CreateObject();
     if (root == NULL)
     {
-        ESP_LOGE("JSON", "Error al crear objeto JSON");
+        // ESP_LOGE("JSON", "Error al crear objeto JSON");
         return NULL;
     }
 
-    // Crear el JSON con datos de ejemplo
-    cJSON_AddStringToObject(root, "device", "ESP32");
-    cJSON_AddNumberToObject(root, "temperature", 25.4);
-    cJSON_AddBoolToObject(root, "status", true);
+    cJSON_AddStringToObject(root, "id", mac_str);
+    // cJSON_AddNumberToObject(root, "temperature", 25.4);
+    // cJSON_AddBoolToObject(root, "status", true);
 
     // Serializar el JSON a una cadena
     char *json_str = cJSON_PrintUnformatted(root);
@@ -74,6 +79,30 @@ char *json()
 
     return json_str;
 }
+
+char *sensores_json()
+{
+    cJSON *root = cJSON_CreateObject();
+    if (root == NULL)
+    {
+        // ESP_LOGE("JSON", "Error al crear objeto JSON");
+        return NULL;
+    }
+
+    cJSON_AddNumberToObject(root, "presion", sensores.presion);
+    cJSON_AddNumberToObject(root, "nivel_cisterna", sensores.nivel_cisterna);
+    cJSON_AddNumberToObject(root, "flujo_apt_1", sensores.flujo_apt1);
+    cJSON_AddNumberToObject(root, "flujo_apt_2", sensores.flujo_apt2);
+    cJSON_AddNumberToObject(root, "flujo_apt_3", sensores.flujo_apt3);
+    cJSON_AddNumberToObject(root, "flujo_apt_4", sensores.flujo_apt4);
+
+    // Serializar el JSON a una cadena
+    char *json_str = cJSON_PrintUnformatted(root);
+    cJSON_Delete(root);
+
+    return json_str;
+}
+esp_mqtt_client_handle_t client_mqtt;
 
 void mqtt5_app_start(void)
 {
@@ -83,17 +112,32 @@ void mqtt5_app_start(void)
         .network.disable_auto_reconnect = false,
     };
 
-    esp_mqtt_client_handle_t client = esp_mqtt_client_init(&mqtt5_cfg);
-    esp_mqtt_client_register_event(client, ESP_EVENT_ANY_ID, mqtt5_event_handler, NULL);
-    esp_mqtt_client_start(client);
+    // esp_mqtt_client_handle_t client = esp_mqtt_client_init(&mqtt5_cfg);
+    client_mqtt = esp_mqtt_client_init(&mqtt5_cfg);
+    esp_mqtt_client_register_event(client_mqtt, ESP_EVENT_ANY_ID, mqtt5_event_handler, NULL);
+    esp_mqtt_client_start(client_mqtt);
 
-    create_topics();
+    // create_topics();
 
-    char *json_message = json();
+    char *json_message = id_json();
     if (json_message != NULL)
     {
         // Publicar el mensaje en el tópico MQTT
-        esp_mqtt_client_publish(client, client_info_topic, json_message, 0, 1, 0);
+        esp_mqtt_client_publish(client_mqtt, client_id_topic, json_message, 0, 1, 1);
         free(json_message);
     }
+}
+
+esp_err_t pub_info_sensores_mqtt(void)
+{
+    char *json_message = sensores_json();
+    if (json_message != NULL)
+    {
+        // Publicar el mensaje en el tópico MQTT
+        int msg_id = esp_mqtt_client_publish(client_mqtt, client_sensores_topic, json_message, 0, 1, 1);
+        free(json_message);
+        if (msg_id == 0)
+            return ESP_OK;
+        }
+    return ESP_FAIL;
 }

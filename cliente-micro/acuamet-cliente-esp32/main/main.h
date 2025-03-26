@@ -4,20 +4,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-#include "src/fsm.h"
-#include "src/wifi_acuamet.h"
-#include "src/mqtt_acuamet.h"
-#include "src/gpio_config.h"
-#include "src/sensores.h"
 
 // Librerias esp
+#include "esp_err.h"
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
 #include "nvs.h"
 #include "nvs_flash.h"
-#include "esp_err.h"
 #include "esp_mac.h"
 #include "cJSON.h"
 #include "esp_netif.h"
@@ -35,6 +30,12 @@
 #include "esp_adc/adc_oneshot.h"
 #include "esp_adc/adc_cali.h"
 #include "esp_adc/adc_cali_scheme.h"
+
+#include "src/fsm.h"
+#include "src/wifi_acuamet.h"
+#include "src/mqtt_acuamet.h"
+#include "src/gpio_config.h"
+#include "src/sensores.h"
 
 #define delay_lectura_flujometros 1000
 #define delay_lectura_cisterna 1000

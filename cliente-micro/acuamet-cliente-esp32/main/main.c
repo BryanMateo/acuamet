@@ -27,12 +27,12 @@ void fsm_task(void *pvParameters)
             ESTADO_SIGUIENTE = fun_mqttconn();
             break;
 
-        case EST_LECTSENSMQTT:
-            ESTADO_SIGUIENTE = fun_lectsensmqtt();
+        case EST_ONLINE:
+            ESTADO_SIGUIENTE = fun_online();
             break;
 
-        case EST_SALIDAS:
-            ESTADO_SIGUIENTE = fun_salidas();
+        case EST_OFFLINE:
+            ESTADO_SIGUIENTE = fun_offline();
             break;
 
         case EST_PUBMQTT:

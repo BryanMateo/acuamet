@@ -71,38 +71,46 @@ int fun_mqttconn(void)
     ESP_LOGW(TAG, "Estado MQTTconn");
     ESTADO_ANTERIOR = ESTADO_ACTUAL;
     ESTADO_ACTUAL = EST_MQTTCONN;
+    create_topics(); // funcion que crea el string de topicos con el numero de serie del ESP
     mqtt5_app_start();
 
     while (1)
     {
         if (mqtt_connected)
         {
-            return EST_LECTSENSMQTT;
+            return EST_ONLINE;
         }
 
         vTaskDelay(pdMS_TO_TICKS(delay_estados));
     }
 }
 
-int fun_lectsensmqtt(void)
+int fun_online(void)
 {
-    ESP_LOGW(TAG, "Estado LectsensMQTT");
+    ESP_LOGW(TAG, "Estado Online");
     ESTADO_ANTERIOR = ESTADO_ACTUAL;
-    ESTADO_ACTUAL = EST_LECTSENSMQTT;
+    ESTADO_ACTUAL = EST_ONLINE;
 
     while (1)
     {
-        // if (wifi_connected)
+        if (wifi_connected & mqtt_connected)
+        {
+            esp_err_t err = pub_info_sensores_mqtt();
+            if (err == ESP_OK)
+            {
+                printf("Sensores publicados \n");
+            }
+        }
 
-        vTaskDelay(pdMS_TO_TICKS(delay_estados));
+        vTaskDelay(pdMS_TO_TICKS(delay_estado_online));
     }
 }
 
-int fun_salidas(void)
+int fun_offline(void)
 {
-    ESP_LOGW(TAG, "Estado Salidas");
+    ESP_LOGW(TAG, "Estado Offline");
     ESTADO_ANTERIOR = ESTADO_ACTUAL;
-    ESTADO_ACTUAL = EST_SALIDAS;
+    ESTADO_ACTUAL = EST_OFFLINE;
 
     while (1)
     {

@@ -110,8 +110,16 @@ float read_pin_presion(void)
     // float presion = (adc_raw / 4095.0) * 3.3;
     // printf("Lectura ADC: %d, Voltaje: %.2fV\n", adc_raw, presion);
 
-    adc_oneshot_read(sensor_presion_handle, pin_sensor_presion, &adc_raw);
-    adc_cali_raw_to_voltage(sensor_presion_cali_handle, adc_raw, &voltage_mv);
+    for (size_t i = 0; i < promedio_presion; i++)
+    {
+        int lectura = 0;
+        adc_oneshot_read(sensor_presion_handle, pin_sensor_presion, &adc_raw);
+        adc_cali_raw_to_voltage(sensor_presion_cali_handle, adc_raw, &lectura);
+        voltage_mv += lectura;
+    }
+    voltage_mv = voltage_mv / promedio_presion;
+    //adc_oneshot_read(sensor_presion_handle, pin_sensor_presion, &adc_raw);
+    //adc_cali_raw_to_voltage(sensor_presion_cali_handle, adc_raw, &voltage_mv);
     // printf("Lectura ADC: %i, Voltaje calibrado: %imV\n", adc_raw, voltage_mv);
 
     if (voltage_mv > 367)
