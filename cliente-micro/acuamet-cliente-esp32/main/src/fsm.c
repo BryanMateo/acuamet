@@ -96,9 +96,9 @@ int fun_online(void)
         if (wifi_connected & mqtt_connected)
         {
             esp_err_t err = pub_info_sensores_mqtt();
-            if (err == ESP_OK)
+            if (err != ESP_OK)
             {
-                printf("Sensores publicados \n");
+                //printf("Sensores publicados \n");
             }
         }
 

@@ -11,6 +11,14 @@
     "apt": "apto asociado a la metrica",
     "consumo": "apto asociado a la metrica",
     "fecha": "fecha actual"
+},
+
+{
+    "flujo_apt1": true,
+    "flujo_apt2": true,
+    "flujo_apt3": true,
+    "flujo_apt4": true,
+    "bomba": false
 }
 
 ]

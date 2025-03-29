@@ -1,6 +1,6 @@
 #include "wifi_acuamet.h"
 
-char ssid[32] = {0}, password[32] = {0};
+char ssid[33] = {0}, password[33] = {0}, key[33] = {0};
 char mac_end[5] = "";
 char mac_str[13] = "";
 uint8_t mac[6] = "";
@@ -25,6 +25,7 @@ const char *html_page = "<!DOCTYPE html>"
                         "<form action='/wifi' method='post'>"
                         "SSID: <input type='text' name='ssid' placeholder='Ingrese SSID'><br>"
                         "Contraseña: <input type='password' name='password' placeholder='Ingrese contraseña'><br>"
+                        "Llave: <input type='text' name='key' placeholder='Ingrese llave unica'><br>"
                         "<input type='submit' value='Guardar'>"
                         "</form>"
                         "</body>"
@@ -54,7 +55,7 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t e
     }
 }
 
-bool get_wifi_credentials(char *ssid, char *password, size_t max_len)
+bool get_wifi_credentials(char *ssid, char *password, char *key, size_t max_len)
 {
     nvs_handle_t nvs_handle;
     esp_err_t err = nvs_open(STORAGE_NAMESPACE, NVS_READONLY, &nvs_handle);
@@ -66,6 +67,7 @@ bool get_wifi_credentials(char *ssid, char *password, size_t max_len)
 
     size_t ssid_len = max_len;
     size_t password_len = max_len;
+    size_t key_len = max_len;
 
     err = nvs_get_str(nvs_handle, SSID_KEY, ssid, &ssid_len);
     if (err != ESP_OK)
@@ -82,12 +84,19 @@ bool get_wifi_credentials(char *ssid, char *password, size_t max_len)
         nvs_close(nvs_handle);
         return false;
     }
+    err = nvs_get_str(nvs_handle, KEY_KEY, key, &key_len);
+    if (err != ESP_OK)
+    {
+        ESP_LOGE(TAG, "No se encontró key en NVS");
+        nvs_close(nvs_handle);
+        return false;
+    }
 
     nvs_close(nvs_handle);
     return true;
 }
 
-void save_wifi_credentials(const char *ssid, const char *password)
+void save_wifi_credentials(const char *ssid, const char *password, const char *key)
 {
     nvs_handle_t nvs_handle;
     esp_err_t err = nvs_open(STORAGE_NAMESPACE, NVS_READWRITE, &nvs_handle);
@@ -99,6 +108,7 @@ void save_wifi_credentials(const char *ssid, const char *password)
 
     nvs_set_str(nvs_handle, SSID_KEY, ssid);
     nvs_set_str(nvs_handle, PASSWORD_KEY, password);
+    nvs_set_str(nvs_handle, KEY_KEY, key);
     nvs_commit(nvs_handle);
     nvs_close(nvs_handle);
     ESP_LOGI(TAG, "Credenciales WiFi guardadas en NVS");
@@ -125,17 +135,22 @@ esp_err_t wifi_post_handler(httpd_req_t *req)
 
     char *ssid_param = strstr(buf, "ssid=");
     char *password_param = strstr(buf, "&password=");
+    char *key_param = strstr(buf, "&key=");
 
-    if (ssid_param && password_param)
+    if (ssid_param && password_param && key_param)
     {
         *password_param = '\0'; // Reemplazar '&' por fin de string
         password_param += 10;   // Mover puntero después de "&password="
 
+        *key_param = '\0'; // Reemplazar '&' por fin de string
+        key_param += 5;   // Mover puntero después de "&key="
+
         strncpy(ssid, ssid_param + 5, sizeof(ssid) - 1);         // Extraer ssid
         strncpy(password, password_param, sizeof(password) - 1); // Extraer password
+        strncpy(key, key_param, sizeof(key) - 1); // Extraer password
     }
 
-    save_wifi_credentials(ssid, password);
+    save_wifi_credentials(ssid, password, key);
 
     const char *resp_str = "<html><body><h2>Credenciales guardadas. Reiniciando...</h2></body></html>";
     httpd_resp_send(req, resp_str, HTTPD_RESP_USE_STRLEN);
@@ -237,7 +252,7 @@ void start_wifi_sta(const char *ssid, const char *password)
 
 bool nvs_init(void)
 {
-    if (get_wifi_credentials(ssid, password, sizeof(ssid)))
+    if (get_wifi_credentials(ssid, password, key, sizeof(ssid)))
         return true;
     else
         return false;
