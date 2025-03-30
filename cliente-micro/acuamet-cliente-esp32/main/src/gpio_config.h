@@ -19,6 +19,8 @@ extern bool gpio_inicializado;
 #define pin_valvula_3 23
 #define pin_valvula_4 22
 
+#define pin_lcd_scl 22
+#define pin_lcd_sda 21
 // Salidas
 #define PIN_LED 2
 

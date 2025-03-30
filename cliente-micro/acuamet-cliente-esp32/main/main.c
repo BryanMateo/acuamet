@@ -112,6 +112,32 @@ void nivel_cisterna_task(void *pvParameters)
     }
 }
 
+// void LCD_DemoTask(void *param)
+// {
+//     LCD_init(i2c_lcd_address, pin_lcd_sda, pin_lcd_scl, lcd_cols, lcd_rows);
+//     char txtBuf[8];
+//     while (true)
+//     {
+//         int row = 0, col = 0;
+//         LCD_home();
+//         LCD_clearScreen();
+//         LCD_writeStr("---16x4 LCD---");
+//         LCD_setCursor(0, 1);
+//         LCD_writeStr("LCD LibraryDemo");
+//         LCD_setCursor(0, 2);
+//         LCD_writeStr("Time: ");
+//         for (int i = 10; i >= 0; i--)
+//         {
+//             LCD_setCursor(6, 3);
+//             sprintf(txtBuf, "%02d", i);
+//             LCD_writeStr(txtBuf);
+//             vTaskDelay(pdMS_TO_TICKS(1000));
+//         }
+//         LCD_clearScreen();
+//         vTaskDelay(pdMS_TO_TICKS(1000));
+//     }
+// }
+
 void app_main(void)
 {
     xTaskCreate(
@@ -137,4 +163,5 @@ void app_main(void)
         NULL,
         5,
         NULL);
+
 }
