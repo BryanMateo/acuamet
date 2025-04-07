@@ -6,10 +6,13 @@ int ESTADO_ANTERIOR = EST_INIT;
 
 int fun_init(void)
 {
-    gpio_init(); // Inicializar todos los GPIO
-    obtener_mac();
     ESP_LOGW(TAG, "Estado Init");
 
+    gpio_init();                                                             // Inicializar todos los GPIO
+    LCD_init(i2c_lcd_address, pin_lcd_sda, pin_lcd_scl, lcd_cols, lcd_rows); // Inicializa el LCD
+    obtener_mac();
+
+    // Inicializacion de la nvs y parametros de wifi
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
     {
@@ -21,10 +24,19 @@ int fun_init(void)
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     esp_wifi_init(&cfg);
 
+    valvulas_init(); // Inicializa las valvulas
+
+    LCD_home();
+    LCD_clearScreen();
+    LCD_writeStr("Acuamet");
+    LCD_setCursor(0, 1);
+    LCD_writeStr("v1.0");
+
     while (1)
     {
-        if (gpio_get_level(configPin) == 0 || !nvs_init()) // modo config si no hay red guardada o pin config a gnd
+        if (gpio_get_level(config_pin) == 0 || !nvs_init()) // modo config si no hay red guardada o pin config a gnd
         {
+            vTaskDelay(pdMS_TO_TICKS(3000));
             return EST_CONFIG;
         }
         else
@@ -41,6 +53,18 @@ int fun_config(void)
     ESTADO_ANTERIOR = ESTADO_ACTUAL;
     ESTADO_ACTUAL = EST_CONFIG;
     config();
+
+    LCD_home();
+    LCD_clearScreen();
+    LCD_writeStr("Config mode");
+    LCD_setCursor(0, 1);
+    LCD_writeStr("Wf: ");
+    LCD_setCursor(4, 1);
+    LCD_writeStr(ap_ssid);
+    LCD_setCursor(0, 2);
+    LCD_writeStr("Pwd: ");
+    LCD_setCursor(5, 2);
+    LCD_writeStr("acuametcfg1");
 
     while (1)
     {
@@ -90,7 +114,9 @@ int fun_online(void)
     ESP_LOGW(TAG, "Estado Online");
     ESTADO_ANTERIOR = ESTADO_ACTUAL;
     ESTADO_ACTUAL = EST_ONLINE;
-
+    LCD_home();
+    LCD_clearScreen();
+    LCD_writeStr("Online");
     while (1)
     {
         if (wifi_connected & mqtt_connected)
@@ -98,7 +124,7 @@ int fun_online(void)
             esp_err_t err = pub_info_sensores_mqtt();
             if (err != ESP_OK)
             {
-                //printf("Sensores publicados \n");
+                // printf("Sensores publicados \n");
             }
         }
 
@@ -111,6 +137,9 @@ int fun_offline(void)
     ESP_LOGW(TAG, "Estado Offline");
     ESTADO_ANTERIOR = ESTADO_ACTUAL;
     ESTADO_ACTUAL = EST_OFFLINE;
+    LCD_home();
+    LCD_clearScreen();
+    LCD_writeStr("Offline");
 
     while (1)
     {

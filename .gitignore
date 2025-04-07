@@ -3,3 +3,6 @@ plataforma/api/.env
 cliente-micro/acuamet-cliente-esp32/.devcontainer
 cliente-micro/acuamet-cliente-esp32/.vscode
 cliente-micro/acuamet-cliente-esp32/build
+cliente-micro/pcb_cliente_micro_acuamet/pcb_cliente_micro_acuamet-backups
+cliente-micro/pcb_cliente_micro_acuamet/fp-info-cache
+

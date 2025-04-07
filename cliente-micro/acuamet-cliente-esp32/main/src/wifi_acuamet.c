@@ -5,6 +5,7 @@ char mac_end[5] = "";
 char mac_str[13] = "";
 uint8_t mac[6] = "";
 bool wifi_connected = false;
+char ap_ssid[13] = "acuamet_";
 
 const char *html_page = "<!DOCTYPE html>"
                         "<html>"
@@ -143,11 +144,11 @@ esp_err_t wifi_post_handler(httpd_req_t *req)
         password_param += 10;   // Mover puntero después de "&password="
 
         *key_param = '\0'; // Reemplazar '&' por fin de string
-        key_param += 5;   // Mover puntero después de "&key="
+        key_param += 5;    // Mover puntero después de "&key="
 
         strncpy(ssid, ssid_param + 5, sizeof(ssid) - 1);         // Extraer ssid
         strncpy(password, password_param, sizeof(password) - 1); // Extraer password
-        strncpy(key, key_param, sizeof(key) - 1); // Extraer password
+        strncpy(key, key_param, sizeof(key) - 1);                // Extraer password
     }
 
     save_wifi_credentials(ssid, password, key);
@@ -155,6 +156,9 @@ esp_err_t wifi_post_handler(httpd_req_t *req)
     const char *resp_str = "<html><body><h2>Credenciales guardadas. Reiniciando...</h2></body></html>";
     httpd_resp_send(req, resp_str, HTTPD_RESP_USE_STRLEN);
 
+    LCD_home();
+    LCD_clearScreen();
+    LCD_writeStr("Reiniciando...");
     vTaskDelay(3000 / portTICK_PERIOD_MS);
     esp_restart();
     return ESP_OK;
@@ -178,7 +182,7 @@ httpd_handle_t start_webserver()
 
 void start_softap()
 {
-    char ap_ssid[13] = "acuamet_";
+    // char ap_ssid[13] = "acuamet_";
     strcat(ap_ssid, mac_end);
 
     esp_netif_create_default_wifi_ap();
@@ -189,7 +193,7 @@ void start_softap()
             .channel = 1,
             .authmode = WIFI_AUTH_WPA_WPA2_PSK,
             .max_connection = 4,
-            .password = "12345678"},
+            .password = "acuametcfg1"},
     };
     strncpy((char *)wifi_config.ap.ssid, ap_ssid, sizeof(wifi_config.ap.ssid));
     wifi_config.ap.ssid[sizeof(wifi_config.ap.ssid) - 1] = '\0'; // Asegurar terminación
@@ -260,9 +264,9 @@ bool nvs_init(void)
 
 void config(void)
 {
-    ESP_LOGW(TAG, "Inicializando AP");
+    // ESP_LOGW(TAG, "Inicializando AP");
     start_softap();
-    ESP_LOGW(TAG, "Inicializando WS");
+    // ESP_LOGW(TAG, "Inicializando WS");
     start_webserver();
 }
 
@@ -284,6 +288,6 @@ void obtener_mac(void)
     }
     else
     {
-       // printf("Error MAC: %s\n", esp_err_to_name(err));
+        // printf("Error MAC: %s\n", esp_err_to_name(err));
     }
 }

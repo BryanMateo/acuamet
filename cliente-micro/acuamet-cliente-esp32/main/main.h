@@ -30,10 +30,8 @@
 #include "esp_adc/adc_oneshot.h"
 #include "esp_adc/adc_cali.h"
 #include "esp_adc/adc_cali_scheme.h"
-// #include "driver/i2c_master.h"
-// #include "driver/i2c_types.h"
-
 #include "driver/i2c.h"
+#include "driver/ledc.h"
 
 #include "src/fsm.h"
 #include "src/wifi_acuamet.h"
@@ -41,9 +39,11 @@
 #include "src/gpio_config.h"
 #include "src/sensores.h"
 #include "src/lcd.h"
+#include "src/control_valvula.h"
 
 #define delay_lectura_flujometros 1000
 #define delay_lectura_cisterna 1000
+#define delay_salidas_task 1000
 extern const char *TAG;
 
 struct SENSORES

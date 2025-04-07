@@ -1,34 +1,5 @@
 #include "lcd.h"
 
-// i2c_master_dev_handle_t i2c_lcd_handle;
-
-// esp_err_t i2c_lcd_init(void)
-// {
-//     i2c_master_bus_config_t i2c_mst_config = {
-//         .clk_source = I2C_CLK_SRC_DEFAULT,
-//         .i2c_port = i2c_lcd_port,
-//         .scl_io_num = pin_lcd_scl,
-//         .sda_io_num = pin_lcd_sda,
-//         .glitch_ignore_cnt = 7,
-//         .flags.enable_internal_pullup = true};
-//     i2c_master_bus_handle_t bus_handle;
-
-//     esp_err_t err = i2c_new_master_bus(&i2c_mst_config, &bus_handle);
-//     if (err != ESP_OK)
-//     {
-//         printf("Err i2c %X", err);
-//         return err;
-//     }
-
-//     i2c_device_config_t dev_cfg = {
-//         .dev_addr_length = I2C_ADDR_BIT_LEN_7,
-//         .device_address = i2c_lcd_address,
-//         .scl_speed_hz = 100000,
-//     };
-
-//     return i2c_master_bus_add_device(bus_handle, &dev_cfg, &i2c_lcd_handle);
-// }
-
 static uint8_t LCD_addr;
 static uint8_t SDA_pin;
 static uint8_t SCL_pin;
@@ -106,12 +77,12 @@ void LCD_init(uint8_t addr, uint8_t dataPin, uint8_t clockPin, uint8_t cols, uin
 
     // Reset the LCD controller
     LCD_writeNibble(LCD_FUNCTION_RESET, LCD_COMMAND);    // First part of reset sequence
-    vTaskDelay(10 / portTICK_PERIOD_MS);                   // 4.1 mS delay (min)
+    vTaskDelay(10 / portTICK_PERIOD_MS);                 // 4.1 mS delay (min)
     LCD_writeNibble(LCD_FUNCTION_RESET, LCD_COMMAND);    // second part of reset sequence
-    esp_rom_delay_us(200);                                   // 100 uS delay (min)
+    esp_rom_delay_us(200);                               // 100 uS delay (min)
     LCD_writeNibble(LCD_FUNCTION_RESET, LCD_COMMAND);    // Third time's a charm
     LCD_writeNibble(LCD_FUNCTION_SET_4BIT, LCD_COMMAND); // Activate 4-bit mode
-    esp_rom_delay_us(80);                                    // 40 uS delay (min)
+    esp_rom_delay_us(80);                                // 40 uS delay (min)
 
     // --- Busy flag now available ---
     // Function Set instruction
@@ -120,7 +91,7 @@ void LCD_init(uint8_t addr, uint8_t dataPin, uint8_t clockPin, uint8_t cols, uin
 
     // Clear Display instruction
     LCD_writeByte(LCD_CLEAR, LCD_COMMAND); // clear display RAM
-    vTaskDelay(2 / portTICK_PERIOD_MS);      // Clearing memory takes a bit longer
+    vTaskDelay(2 / portTICK_PERIOD_MS);    // Clearing memory takes a bit longer
 
     // Entry Mode Set instruction
     LCD_writeByte(LCD_ENTRY_MODE, LCD_COMMAND); // Set desired shift characteristics
@@ -128,6 +99,7 @@ void LCD_init(uint8_t addr, uint8_t dataPin, uint8_t clockPin, uint8_t cols, uin
 
     LCD_writeByte(LCD_DISPLAY_ON, LCD_COMMAND); // Ensure LCD is set to on
 }
+
 void LCD_setCursor(uint8_t col, uint8_t row)
 {
     if (row > LCD_rows - 1)

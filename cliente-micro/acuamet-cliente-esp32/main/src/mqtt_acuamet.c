@@ -28,6 +28,38 @@ static void mqtt5_event_handler(void *handler_args, esp_event_base_t base, int32
 
         if (strncmp(event->topic, client_control_topic, event->topic_len) == 0)
         {
+            const char *json_string = (char *)event_data;
+
+            cJSON *json = cJSON_Parse(json_string);
+            if (json == NULL)
+            {
+                const char *error_ptr = cJSON_GetErrorPtr();
+                if (error_ptr != NULL)
+                {
+                    fprintf(stderr, "Error antes de: %s\n", error_ptr);
+                }
+                break;
+            }
+
+            // Array con las claves de interés
+            const char *claves[] = {"valvula_apt1", "valvula_apt2", "valvula_apt3", "valvula_apt4", "bomba"};
+            size_t num_claves = sizeof(claves) / sizeof(claves[0]);
+
+            // Iterar sobre las claves y extraer sus valores
+            for (size_t i = 0; i < num_claves; ++i)
+            {
+                cJSON *item = cJSON_GetObjectItemCaseSensitive(json, claves[i]);
+                if (cJSON_IsBool(item))
+                {
+                    printf("%s: %s\n", claves[i], cJSON_IsTrue(item) ? "true" : "false");
+                }
+                else
+                {
+                    printf("La clave '%s' no es de tipo booleano o no existe en el JSON.\n", claves[i]);
+                }
+            }
+
+            cJSON_Delete(json);
 
             // char received_data[2]; // Solo esperamos "0" o "1"
             // snprintf(received_data, sizeof(received_data), "%.*s", event->data_len, event->data);
@@ -94,7 +126,6 @@ void mqtt5_app_start(void)
         .network.disable_auto_reconnect = false,
     };
 
-    // esp_mqtt_client_handle_t client = esp_mqtt_client_init(&mqtt5_cfg);
     client_mqtt = esp_mqtt_client_init(&mqtt5_cfg);
     esp_mqtt_client_register_event(client_mqtt, ESP_EVENT_ANY_ID, mqtt5_event_handler, NULL);
     esp_mqtt_client_start(client_mqtt);
@@ -105,7 +136,6 @@ esp_err_t pub_info_sensores_mqtt(void)
     char *json_message = sensores_json();
     if (json_message != NULL)
     {
-        // Publicar el mensaje en el tópico MQTT
         int msg_id = esp_mqtt_client_publish(client_mqtt, client_info_topic, json_message, 0, 1, 1);
         free(json_message);
         if (msg_id == 0)

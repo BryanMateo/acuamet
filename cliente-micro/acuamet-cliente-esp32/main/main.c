@@ -51,7 +51,7 @@ void fsm_task(void *pvParameters)
     }
 }
 
-void flujometros_task(void *pvParameters)
+void flujo_presion_task(void *pvParameters)
 {
     sensores.flujo_apt1 = 0;
     sensores.flujo_apt2 = 0;
@@ -63,16 +63,6 @@ void flujometros_task(void *pvParameters)
     {
         if (gpio_inicializado) // espera a que todos los gpio se inicialicen
         {
-            // uint32_t pulsos_flujo_1 = 0;
-
-            // pcnt_get_counter_value(PCNT_UNIT_0, (int16_t *)&pulsos_flujo_1);
-            // if (pulsos_flujo_1 > 0)
-            // {
-            //     pcnt_counter_clear(PCNT_UNIT_0);
-            // }
-            // litros_flujo_1 += (float)pulsos_flujo_1 / constante_ppl_flujometro;
-            // ESP_LOGW(TAG, "Litros Flujometro 1 = %.2f", litros_flujo_1);
-
             sensores.flujo_apt1 += calc_galon_flujo(pcnt_unit_flujo_1);
             sensores.flujo_apt2 += calc_galon_flujo(pcnt_unit_flujo_2);
             sensores.flujo_apt3 += calc_galon_flujo(pcnt_unit_flujo_3);
@@ -80,7 +70,7 @@ void flujometros_task(void *pvParameters)
 
             sensores.presion = read_pin_presion();
 
-            printf("1: %.2f 2: %.2f 3: %.2f 4: %.2f \n", sensores.flujo_apt1, sensores.flujo_apt2, sensores.flujo_apt3, sensores.flujo_apt4);
+            // printf("1: %.2f 2: %.2f 3: %.2f 4: %.2f \n", sensores.flujo_apt1, sensores.flujo_apt2, sensores.flujo_apt3, sensores.flujo_apt4);
             // printf("Presion = %.2fPSI \n", presion);
         }
         vTaskDelay(pdMS_TO_TICKS(delay_lectura_flujometros));
@@ -112,31 +102,42 @@ void nivel_cisterna_task(void *pvParameters)
     }
 }
 
-// void LCD_DemoTask(void *param)
+// void salidas_task(void *pvParameters)
 // {
-//     LCD_init(i2c_lcd_address, pin_lcd_sda, pin_lcd_scl, lcd_cols, lcd_rows);
-//     char txtBuf[8];
-//     while (true)
+//     while (1)
 //     {
-//         int row = 0, col = 0;
-//         LCD_home();
-//         LCD_clearScreen();
-//         LCD_writeStr("---16x4 LCD---");
-//         LCD_setCursor(0, 1);
-//         LCD_writeStr("LCD LibraryDemo");
-//         LCD_setCursor(0, 2);
-//         LCD_writeStr("Time: ");
-//         for (int i = 10; i >= 0; i--)
-//         {
-//             LCD_setCursor(6, 3);
-//             sprintf(txtBuf, "%02d", i);
-//             LCD_writeStr(txtBuf);
-//             vTaskDelay(pdMS_TO_TICKS(1000));
-//         }
-//         LCD_clearScreen();
-//         vTaskDelay(pdMS_TO_TICKS(1000));
+
+//         vTaskDelay(pdMS_TO_TICKS(delay_salidas_task))
 //     }
 // }
+
+/*
+void LCD_DemoTask(void *param)
+{
+    LCD_init(i2c_lcd_address, pin_lcd_sda, pin_lcd_scl, lcd_cols, lcd_rows);
+    char txtBuf[8];
+    while (true)
+    {
+        int row = 0, col = 0;
+        LCD_home();
+        LCD_clearScreen();
+        LCD_writeStr("---16x4 LCD---");
+        LCD_setCursor(0, 1);
+        LCD_writeStr("LCD LibraryDemo");
+        LCD_setCursor(0, 2);
+        LCD_writeStr("Time: ");
+        for (int i = 10; i >= 0; i--)
+        {
+            LCD_setCursor(6, 3);
+            sprintf(txtBuf, "%02d", i);
+            LCD_writeStr(txtBuf);
+            vTaskDelay(pdMS_TO_TICKS(1000));
+        }
+        LCD_clearScreen();
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+}
+*/
 
 void app_main(void)
 {
@@ -149,8 +150,8 @@ void app_main(void)
         NULL);
 
     xTaskCreate(
-        flujometros_task,
-        "flujometros",
+        flujo_presion_task,
+        "flujo_presion",
         4096,
         NULL,
         5,
@@ -158,10 +159,17 @@ void app_main(void)
 
     xTaskCreate(
         nivel_cisterna_task,
-        "Nivel cisterna",
+        "nivel cisterna",
         4096,
         NULL,
         5,
         NULL);
 
+    // xTaskCreate(
+    //     salidas_task,
+    //     "nivel cisterna",
+    //     4096,
+    //     NULL,
+    //     5,
+    //     NULL);
 }

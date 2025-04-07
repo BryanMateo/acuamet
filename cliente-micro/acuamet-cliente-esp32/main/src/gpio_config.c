@@ -45,11 +45,18 @@ void gpio_init(void)
     set_pin_presion(pin_sensor_presion);
 
     /* ENTRADAS */
-    gpio_set_direction(configPin, GPIO_MODE_INPUT); // Pin config mode
-    gpio_set_pull_mode(configPin, GPIO_PULLUP_ONLY);
+    gpio_set_direction(config_pin, GPIO_MODE_INPUT); // Pin config mode
+    gpio_set_pull_mode(config_pin, GPIO_PULLUP_ONLY);
 
     /* SALIDAS */
-    gpio_set_direction(pin_ultrasonico_cisterna_trig, GPIO_MODE_OUTPUT); // pin trigger sensor nivel cisterna ultrasonico
+    gpio_set_direction(pin_ultrasonico_cisterna_trig, GPIO_MODE_OUTPUT); // Pin trigger sensor nivel cisterna ultrasonico
 
-    gpio_inicializado = true;
+    gpio_set_direction(pin_relay_bomba, GPIO_MODE_OUTPUT); // Pin del relay de encendido/apagado bomba
+
+    gpio_set_direction(pin_pwr_on_led, GPIO_MODE_OUTPUT);   // Pin led indicador PWR
+    gpio_set_direction(pin_signal_led_r, GPIO_MODE_OUTPUT); // Pin led indicador wifi r
+    gpio_set_direction(pin_signal_led_g, GPIO_MODE_OUTPUT); // Pin led indicador wifi g
+    gpio_set_direction(pin_signal_led_b, GPIO_MODE_OUTPUT); // Pin led indicador wifi b
+
+    gpio_inicializado = true; // Flag para saber que se ejecuto la funcion
 }
