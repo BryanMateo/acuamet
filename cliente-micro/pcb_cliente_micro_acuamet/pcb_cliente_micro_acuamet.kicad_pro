@@ -509,7 +509,7 @@
       "plot": "",
       "pos_files": "",
       "specctra_dsn": "",
-      "step": "",
+      "step": "pcb_cliente_micro_acuamet.step",
       "svg": "",
       "vrml": ""
     },
