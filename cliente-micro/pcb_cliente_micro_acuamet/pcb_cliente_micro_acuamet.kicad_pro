@@ -467,7 +467,10 @@
   },
   "libraries": {
     "pinned_footprint_libs": [],
-    "pinned_symbol_libs": []
+    "pinned_symbol_libs": [
+      "EasyEDA",
+      "Snapeda"
+    ]
   },
   "meta": {
     "filename": "pcb_cliente_micro_acuamet.kicad_pro",
@@ -506,7 +509,7 @@
       "gencad": "",
       "idf": "",
       "netlist": "",
-      "plot": "",
+      "plot": "PLOT/",
       "pos_files": "",
       "specctra_dsn": "",
       "step": "pcb_cliente_micro_acuamet.step",

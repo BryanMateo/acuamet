@@ -1250,168 +1250,6 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Device:C_Polarized_Small"
-			(pin_numbers
-				(hide yes)
-			)
-			(pin_names
-				(offset 0.254)
-				(hide yes)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "C"
-				(at 0.254 1.778 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Value" "C_Polarized_Small"
-				(at 0.254 -2.032 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "~"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Polarized capacitor, small symbol"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "cap capacitor"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "CP_*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "C_Polarized_Small_0_1"
-				(rectangle
-					(start -1.524 0.6858)
-					(end 1.524 0.3048)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(rectangle
-					(start -1.524 -0.3048)
-					(end 1.524 -0.6858)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(polyline
-					(pts
-						(xy -1.27 1.524) (xy -0.762 1.524)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -1.016 1.27) (xy -1.016 1.778)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "C_Polarized_Small_1_1"
-				(pin passive line
-					(at 0 2.54 270)
-					(length 1.8542)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 0 -2.54 90)
-					(length 1.8542)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
 		(symbol "Device:C_Small"
 			(pin_numbers
 				(hide yes)
@@ -3673,6 +3511,174 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "EasyEDA:TMCMA1C106KTRF"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "U"
+				(at 0 81.28 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "TMCMA1C106KTRF"
+				(at 0 71.12 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "EasyEDA:CAP-SMD_L3.2-W1.6"
+				(at 0 68.58 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC Part" "C4988312"
+				(at 0 66.04 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "TMCMA1C106KTRF_0_1"
+				(polyline
+					(pts
+						(xy -100.33 76.2) (xy -98.3 76.2)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -100.08 77.47) (xy -99.06 77.47)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -99.57 77.98) (xy -99.57 76.96)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start -96.64 77.99)
+					(mid -95.9322 76.2159)
+					(end -96.66 74.45)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -98.3 77.98) (xy -98.3 74.42)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -97.28 76.2) (xy -95.25 76.2)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin input line
+					(at -102.87 76.2 0)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -92.71 76.2 180)
+					(length 2.54)
+					(name "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Snapeda:BUTT-2"
 			(pin_names
 				(offset 1.016)
@@ -3937,6 +3943,174 @@
 						(effects
 							(font
 								(size 1.016 1.016)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "TMCMA1C106KTRF_1"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "C3"
+				(at 0 -6.35 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "TMCMA1C106KTRF"
+				(at 0 -3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "EasyEDA:CAP-SMD_L3.2-W1.6"
+				(at 0.762 11.684 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC Part" "C4988312"
+				(at 0.762 9.144 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "TMCMA1C106KTRF_1_0_1"
+				(polyline
+					(pts
+						(xy -2.54 0) (xy -0.51 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.29 1.27) (xy -1.27 1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.78 1.78) (xy -1.78 0.76)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 1.15 1.79)
+					(mid 1.8578 0.0159)
+					(end 1.13 -1.75)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -0.51 1.78) (xy -0.51 -1.78)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.51 0) (xy 2.54 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin input line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at 5.08 0 180)
+					(length 2.54)
+					(name "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
 							)
 						)
 					)
@@ -5104,7 +5278,7 @@
 	)
 	(wire
 		(pts
-			(xy 54.61 46.99) (xy 57.15 46.99)
+			(xy 63.5 46.99) (xy 66.04 46.99)
 		)
 		(stroke
 			(width 0)
@@ -6274,7 +6448,7 @@
 	)
 	(wire
 		(pts
-			(xy 57.15 46.99) (xy 57.15 48.26)
+			(xy 66.04 46.99) (xy 66.04 48.26)
 		)
 		(stroke
 			(width 0)
@@ -6311,6 +6485,16 @@
 			(type default)
 		)
 		(uuid "cc8973af-9593-4d70-b063-79fcbd28133b")
+	)
+	(wire
+		(pts
+			(xy 17.78 73.66) (xy 17.78 76.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cdace733-cc5d-4e1c-96cb-c00658bc22e1")
 	)
 	(wire
 		(pts
@@ -6544,16 +6728,6 @@
 	)
 	(wire
 		(pts
-			(xy 17.78 68.58) (xy 17.78 71.12)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f37a16e7-f722-42e4-912a-675a94a9bf18")
-	)
-	(wire
-		(pts
 			(xy 139.7 163.83) (xy 143.51 163.83)
 		)
 		(stroke
@@ -6564,7 +6738,7 @@
 	)
 	(wire
 		(pts
-			(xy 48.26 46.99) (xy 49.53 46.99)
+			(xy 48.26 46.99) (xy 53.34 46.99)
 		)
 		(stroke
 			(width 0)
@@ -7395,7 +7569,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 57.15 48.26 0)
+		(at 66.04 48.26 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -7404,7 +7578,7 @@
 		(fields_autoplaced yes)
 		(uuid "0d9eb9aa-eefe-4e21-ab82-117e7793428c")
 		(property "Reference" "#PWR023"
-			(at 57.15 54.61 0)
+			(at 66.04 54.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7413,7 +7587,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 57.15 53.34 0)
+			(at 66.04 53.34 0)
 			(effects
 				(font
 					(size 1 1)
@@ -7421,7 +7595,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 57.15 48.26 0)
+			(at 66.04 48.26 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7430,7 +7604,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 57.15 48.26 0)
+			(at 66.04 48.26 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7439,7 +7613,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 57.15 48.26 0)
+			(at 66.04 48.26 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7993,75 +8167,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:C_Polarized_Small")
-		(at 52.07 46.99 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "248c7e67-93fb-4f15-8ba9-8d68cc698938")
-		(property "Reference" "C3"
-			(at 53.594 42.164 90)
-			(effects
-				(font
-					(size 1 1)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "10uF 16v"
-			(at 60.198 44.196 90)
-			(effects
-				(font
-					(size 1 1)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_THT:CP_Radial_D6.3mm_P2.50mm"
-			(at 52.07 46.99 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 52.07 46.99 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Polarized capacitor, small symbol"
-			(at 52.07 46.99 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "3e74fd1a-4860-401d-9c36-a3a0cd1c261d")
-		)
-		(pin "2"
-			(uuid "1f31899b-01d8-46fb-a845-966dfd065144")
-		)
-		(instances
-			(project ""
-				(path "/40156f8c-40d9-435e-851b-9df8dfaedb63"
-					(reference "C3")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:+5V")
 		(at 43.18 30.48 0)
 		(unit 1)
@@ -8533,7 +8638,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 17.78 71.12 0)
+		(at 17.78 76.2 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -8542,7 +8647,7 @@
 		(fields_autoplaced yes)
 		(uuid "3b0e49e8-de21-4854-bc09-23c5b11a633a")
 		(property "Reference" "#PWR04"
-			(at 17.78 77.47 0)
+			(at 17.78 82.55 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8551,7 +8656,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 17.78 76.2 0)
+			(at 17.78 81.28 0)
 			(effects
 				(font
 					(size 1 1)
@@ -8559,7 +8664,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 17.78 71.12 0)
+			(at 17.78 76.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8568,7 +8673,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 17.78 71.12 0)
+			(at 17.78 76.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8577,7 +8682,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 17.78 71.12 0)
+			(at 17.78 76.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9700,6 +9805,83 @@
 		)
 	)
 	(symbol
+		(lib_id "EasyEDA:TMCMA1C106KTRF")
+		(at 156.21 123.19 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "6d0affb5-aeae-4278-8110-500747b5cb2a")
+		(property "Reference" "C3"
+			(at 58.42 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10uF"
+			(at 58.42 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "EasyEDA:CAP-SMD_L3.2-W1.6"
+			(at 156.21 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 156.21 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 156.21 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C4988312"
+			(at 156.21 57.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "7545bb70-e263-4d0b-8ff4-ba954c5be328")
+		)
+		(pin "2"
+			(uuid "95e8a1c0-b462-4061-ad5a-a0abe9df5b98")
+		)
+		(instances
+			(project ""
+				(path "/40156f8c-40d9-435e-851b-9df8dfaedb63"
+					(reference "C3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R_Small_US")
 		(at 137.16 171.45 90)
 		(mirror x)
@@ -10172,6 +10354,85 @@
 			(project ""
 				(path "/40156f8c-40d9-435e-851b-9df8dfaedb63"
 					(reference "J6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_name "TMCMA1C106KTRF_1")
+		(lib_id "EasyEDA:TMCMA1C106KTRF")
+		(at 17.78 68.58 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "7eafc8ff-fbde-47cf-9333-d57f2d7238f6")
+		(property "Reference" "C1"
+			(at 20.32 67.3099 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "10uF"
+			(at 21.082 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "EasyEDA:CAP-SMD_L3.2-W1.6"
+			(at 29.464 69.342 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 17.78 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 17.78 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C4988312"
+			(at 26.924 69.342 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "fdffb6ad-aafe-42dc-9947-66ad598cf293")
+		)
+		(pin "2"
+			(uuid "5261a9cb-fe84-4e7e-803f-d9ad7e88b394")
+		)
+		(instances
+			(project "pcb_cliente_micro_acuamet"
+				(path "/40156f8c-40d9-435e-851b-9df8dfaedb63"
+					(reference "C1")
 					(unit 1)
 				)
 			)
@@ -12742,76 +13003,6 @@
 			(project "pcb_cliente_micro_acuamet"
 				(path "/40156f8c-40d9-435e-851b-9df8dfaedb63"
 					(reference "R1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C_Polarized_Small")
-		(at 17.78 66.04 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "e0a41084-6094-461c-a781-03a56dbfd090")
-		(property "Reference" "C1"
-			(at 20.32 64.2238 0)
-			(effects
-				(font
-					(size 1 1)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "22uF 16v"
-			(at 20.32 66.7638 0)
-			(effects
-				(font
-					(size 1 1)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_THT:CP_Radial_D6.3mm_P2.50mm"
-			(at 17.78 66.04 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 17.78 66.04 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Polarized capacitor, small symbol"
-			(at 17.78 66.04 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "71d6193d-3067-4086-b8c0-1cb2bc3c3cd5")
-		)
-		(pin "2"
-			(uuid "87d35413-7182-4669-a106-9309731eaada")
-		)
-		(instances
-			(project "pcb_cliente_micro_acuamet"
-				(path "/40156f8c-40d9-435e-851b-9df8dfaedb63"
-					(reference "C1")
 					(unit 1)
 				)
 			)
