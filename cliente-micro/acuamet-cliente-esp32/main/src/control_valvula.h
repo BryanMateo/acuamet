@@ -14,6 +14,10 @@
 #define LEDC_VALVULA_3 LEDC_CHANNEL_2
 #define LEDC_VALVULA_4 LEDC_CHANNEL_3
 
+#define VALV_ABIERTA 1
+#define VALV_CERRADA 0
+
 void valvulas_init();
+void control_valvula(ledc_channel_t, bool);
 
 #endif

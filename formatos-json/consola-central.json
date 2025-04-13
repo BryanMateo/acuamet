@@ -19,6 +19,13 @@
     "flujo_apt3": true,
     "flujo_apt4": true,
     "bomba": false
-}
+},
 
+{
+    "valvula_apt1": true,
+    "valvula_apt2": true,
+    "valvula_apt3": true,
+    "valvula_apt4": true,
+    "bomba": false
+}
 ]

@@ -4,6 +4,7 @@ const char *TAG = "cliente_acuamet";
 
 struct SENSORES sensores;
 struct SALIDA salida;
+struct FLAG flag;
 
 void fsm_task(void *pvParameters)
 {
@@ -71,7 +72,7 @@ void flujo_presion_task(void *pvParameters)
             sensores.presion = read_pin_presion();
 
             // printf("1: %.2f 2: %.2f 3: %.2f 4: %.2f \n", sensores.flujo_apt1, sensores.flujo_apt2, sensores.flujo_apt3, sensores.flujo_apt4);
-            // printf("Presion = %.2fPSI \n", presion);
+            // printf("Presion = %.2fPSI \n", sensores.presion);
         }
         vTaskDelay(pdMS_TO_TICKS(delay_lectura_flujometros));
     }
@@ -88,13 +89,13 @@ void nivel_cisterna_task(void *pvParameters)
         switch (sensores.nivel_cisterna)
         {
         case SENS_ERR_RANGE:
-            ESP_LOGE(TAG, "Ultras. err rango");
+            //   ESP_LOGE(TAG, "Ultras. err rango");
             break;
         case SENS_ERR_TIMEOUT:
-            ESP_LOGE(TAG, "Ultras. timeout");
+            // ESP_LOGE(TAG, "Ultras. timeout");
             break;
         default:
-            ESP_LOGI(TAG, "Distancia %icm", sensores.nivel_cisterna);
+            // ESP_LOGI(TAG, "Distancia %icm", sensores.nivel_cisterna);
             break;
         }
 
@@ -102,42 +103,24 @@ void nivel_cisterna_task(void *pvParameters)
     }
 }
 
-// void salidas_task(void *pvParameters)
-// {
-//     while (1)
-//     {
-
-//         vTaskDelay(pdMS_TO_TICKS(delay_salidas_task))
-//     }
-// }
-
-/*
-void LCD_DemoTask(void *param)
+void salidas_task(void *pvParameters)
 {
-    LCD_init(i2c_lcd_address, pin_lcd_sda, pin_lcd_scl, lcd_cols, lcd_rows);
-    char txtBuf[8];
-    while (true)
+    while (1)
     {
-        int row = 0, col = 0;
-        LCD_home();
-        LCD_clearScreen();
-        LCD_writeStr("---16x4 LCD---");
-        LCD_setCursor(0, 1);
-        LCD_writeStr("LCD LibraryDemo");
-        LCD_setCursor(0, 2);
-        LCD_writeStr("Time: ");
-        for (int i = 10; i >= 0; i--)
+        if (flag.control)
         {
-            LCD_setCursor(6, 3);
-            sprintf(txtBuf, "%02d", i);
-            LCD_writeStr(txtBuf);
-            vTaskDelay(pdMS_TO_TICKS(1000));
+            control_valvula(LEDC_VALVULA_1, salida.valvula_apt1);
+            control_valvula(LEDC_VALVULA_2, salida.valvula_apt2);
+            control_valvula(LEDC_VALVULA_3, salida.valvula_apt3);
+            control_valvula(LEDC_VALVULA_4, salida.valvula_apt4);
+
+            printf("Control\n");
+            flag.control = false;
         }
-        LCD_clearScreen();
-        vTaskDelay(pdMS_TO_TICKS(1000));
+
+        vTaskDelay(pdMS_TO_TICKS(delay_salidas_task));
     }
 }
-*/
 
 void app_main(void)
 {
@@ -165,11 +148,11 @@ void app_main(void)
         5,
         NULL);
 
-    // xTaskCreate(
-    //     salidas_task,
-    //     "nivel cisterna",
-    //     4096,
-    //     NULL,
-    //     5,
-    //     NULL);
+    xTaskCreate(
+        salidas_task,
+        "salidas",
+        4096,
+        NULL,
+        5,
+        NULL);
 }

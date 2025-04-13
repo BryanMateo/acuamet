@@ -6,6 +6,11 @@ int ESTADO_ANTERIOR = EST_INIT;
 
 int fun_init(void)
 {
+    // Inicializacion de flags
+    flag.control = false;
+    flag.mqtt_connected = false;
+    flag.wifi_connected = false;
+
     ESP_LOGW(TAG, "Estado Init");
 
     gpio_init();                                                             // Inicializar todos los GPIO
@@ -81,7 +86,7 @@ int fun_wificonn(void)
 
     while (1)
     {
-        if (wifi_connected)
+        if (flag.wifi_connected)
         {
             return EST_MQTTCONN;
         }
@@ -100,7 +105,7 @@ int fun_mqttconn(void)
 
     while (1)
     {
-        if (mqtt_connected)
+        if (flag.mqtt_connected)
         {
             return EST_ONLINE;
         }
@@ -119,7 +124,7 @@ int fun_online(void)
     LCD_writeStr("Online");
     while (1)
     {
-        if (wifi_connected & mqtt_connected)
+        if (flag.wifi_connected & flag.mqtt_connected)
         {
             esp_err_t err = pub_info_sensores_mqtt();
             if (err != ESP_OK)

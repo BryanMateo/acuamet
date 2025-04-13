@@ -4,7 +4,6 @@ char ssid[33] = {0}, password[33] = {0}, key[33] = {0};
 char mac_end[5] = "";
 char mac_str[13] = "";
 uint8_t mac[6] = "";
-bool wifi_connected = false;
 char ap_ssid[13] = "acuamet_";
 
 const char *html_page = "<!DOCTYPE html>"
@@ -45,14 +44,14 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t e
         ESP_LOGI(TAG, "Conexión fallida, intentando reconectar...");
         esp_wifi_connect();
         xEventGroupClearBits(wifi_event_group, WIFI_CONNECTED_BIT);
-        wifi_connected = false;
+        flag.wifi_connected = false;
     }
     else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP)
     {
         ip_event_got_ip_t *event = (ip_event_got_ip_t *)event_data;
         ESP_LOGI(TAG, "Conectado con IP:" IPSTR, IP2STR(&event->ip_info.ip));
         xEventGroupSetBits(wifi_event_group, WIFI_CONNECTED_BIT);
-        wifi_connected = true;
+        flag.wifi_connected = true;
     }
 }
 

@@ -16,7 +16,7 @@ void ledc_init(gpio_num_t pin_valvula, ledc_channel_t channel)
         .timer_sel = LEDC_TIMER,
         .intr_type = LEDC_INTR_DISABLE,
         .gpio_num = pin_valvula,
-        .duty = 0, // Set duty to 0%
+        .duty = 410, // Set duty to 5%
         .hpoint = 0};
     ledc_channel_config(&ledc_channel);
 }
@@ -28,4 +28,15 @@ void valvulas_init(void)
     ledc_init(pin_valvula_2, LEDC_VALVULA_2);
     ledc_init(pin_valvula_3, LEDC_VALVULA_3);
     ledc_init(pin_valvula_4, LEDC_VALVULA_4);
+}
+
+void control_valvula(ledc_channel_t LEDC_VALVULA, bool pos)
+{
+    if (pos == VALV_ABIERTA)
+        ledc_set_duty(LEDC_MODE, LEDC_VALVULA, 605); // 90° aprox
+
+    else
+        ledc_set_duty(LEDC_MODE, LEDC_VALVULA, 410); // 0° aprox
+        
+    ledc_update_duty(LEDC_MODE, LEDC_VALVULA);
 }

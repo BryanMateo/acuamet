@@ -65,7 +65,15 @@ struct SALIDA
     bool valvula_apt4;
 };
 
+struct FLAG
+{
+    bool control;
+    bool wifi_connected;
+    bool mqtt_connected;
+};
+
 extern struct SENSORES sensores;
 extern struct SALIDA salida;
+extern struct FLAG flag;
 
 #endif

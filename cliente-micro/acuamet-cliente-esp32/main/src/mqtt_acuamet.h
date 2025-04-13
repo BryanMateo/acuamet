@@ -1,11 +1,9 @@
 #ifndef MQTT_ACUAMET_H
 #define MQTT_ACUAMET_H
 #include "../main.h"
-//#include "esp_err.h"
+// #include "esp_err.h"
 
 #define CONFIG_BROKER_URL "mqtt://192.168.1.21"
-
-extern bool mqtt_connected;
 
 void mqtt5_app_start();
 void create_topics();

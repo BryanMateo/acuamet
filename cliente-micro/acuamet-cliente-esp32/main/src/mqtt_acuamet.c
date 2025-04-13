@@ -1,11 +1,8 @@
 #include "mqtt_acuamet.h"
 
 char client_root_topic[22] = "";
-// char client_id_topic[30] = "";
 char client_info_topic[36] = "";
 char client_control_topic[30] = "";
-
-bool mqtt_connected = false;
 
 static void mqtt5_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data)
 {
@@ -17,20 +14,21 @@ static void mqtt5_event_handler(void *handler_args, esp_event_base_t base, int32
 
     case MQTT_EVENT_CONNECTED:
         esp_mqtt_client_subscribe(client, client_control_topic, 1);
-        mqtt_connected = true;
+        flag.mqtt_connected = true;
         break;
 
     case MQTT_EVENT_DISCONNECTED:
-        mqtt_connected = false;
+        flag.mqtt_connected = false;
         break;
 
     case MQTT_EVENT_DATA:
 
         if (strncmp(event->topic, client_control_topic, event->topic_len) == 0)
         {
-            const char *json_string = (char *)event_data;
+            char *data_control = strndup(event->data, event->data_len);
+            printf("control topic: %s \n", data_control);
 
-            cJSON *json = cJSON_Parse(json_string);
+            cJSON *json = cJSON_Parse(data_control);
             if (json == NULL)
             {
                 const char *error_ptr = cJSON_GetErrorPtr();
@@ -40,34 +38,31 @@ static void mqtt5_event_handler(void *handler_args, esp_event_base_t base, int32
                 }
                 break;
             }
+            cJSON *item = cJSON_GetObjectItemCaseSensitive(json, "valvula_apt1");
+            if (cJSON_IsBool(item))
+                salida.valvula_apt1 = cJSON_IsTrue(item) ? true : false;
 
-            // Array con las claves de interés
-            const char *claves[] = {"valvula_apt1", "valvula_apt2", "valvula_apt3", "valvula_apt4", "bomba"};
-            size_t num_claves = sizeof(claves) / sizeof(claves[0]);
+            item = cJSON_GetObjectItemCaseSensitive(json, "valvula_apt2");
+            if (cJSON_IsBool(item))
+                salida.valvula_apt2 = cJSON_IsTrue(item) ? true : false;
 
-            // Iterar sobre las claves y extraer sus valores
-            for (size_t i = 0; i < num_claves; ++i)
-            {
-                cJSON *item = cJSON_GetObjectItemCaseSensitive(json, claves[i]);
-                if (cJSON_IsBool(item))
-                {
-                    printf("%s: %s\n", claves[i], cJSON_IsTrue(item) ? "true" : "false");
-                }
-                else
-                {
-                    printf("La clave '%s' no es de tipo booleano o no existe en el JSON.\n", claves[i]);
-                }
-            }
+            item = cJSON_GetObjectItemCaseSensitive(json, "valvula_apt3");
+            if (cJSON_IsBool(item))
+                salida.valvula_apt3 = cJSON_IsTrue(item) ? true : false;
+
+            item = cJSON_GetObjectItemCaseSensitive(json, "valvula_apt4");
+            if (cJSON_IsBool(item))
+                salida.valvula_apt4 = cJSON_IsTrue(item) ? true : false;
+
+            item = cJSON_GetObjectItemCaseSensitive(json, "bomba");
+            if (cJSON_IsBool(item))
+                salida.bomba = cJSON_IsTrue(item) ? true : false;
+
+            printf("%s, %s, %s, %s, %s\n", salida.valvula_apt1 ? "true" : "false", salida.valvula_apt2 ? "true" : "false", salida.valvula_apt3 ? "true" : "false", salida.valvula_apt4 ? "true" : "false", salida.bomba ? "true" : "false");
 
             cJSON_Delete(json);
-
-            // char received_data[2]; // Solo esperamos "0" o "1"
-            // snprintf(received_data, sizeof(received_data), "%.*s", event->data_len, event->data);
-            // if (strcmp(received_data, "1") == 0)
-            // {
-            //     // sppButtonMQTT = 1;
-            //     ESP_LOGI(TAG, "SPP");
-            // }
+            free(data_control);
+            flag.control = true;
         }
         break;
 

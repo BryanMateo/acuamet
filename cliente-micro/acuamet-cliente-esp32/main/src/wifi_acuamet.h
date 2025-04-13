@@ -15,7 +15,6 @@ extern char mac_end[5];
 extern char mac_str[13];
 extern uint8_t mac[6];
 extern char ssid[33], password[33], key[33];
-extern bool wifi_connected;
 extern char ap_ssid[13];
 bool nvs_init();
 void config();
