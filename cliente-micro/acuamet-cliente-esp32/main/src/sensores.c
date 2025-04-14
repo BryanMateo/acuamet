@@ -1,6 +1,5 @@
 #include "sensores.h"
 
-
 // flujometros
 void set_pin_pcnt(pcnt_unit_t unit, gpio_num_t pin) // funcion para declarar el contador y el pin del flujometro
 {
@@ -106,10 +105,6 @@ float read_pin_presion(void)
     int voltage_mv = 0;
     float psi = 0;
 
-    // adc_oneshot_read(sensor_presion_handle, pin_sensor_presion, &adc_raw);
-    // float presion = (adc_raw / 4095.0) * 3.3;
-    // printf("Lectura ADC: %d, Voltaje: %.2fV\n", adc_raw, presion);
-
     for (size_t i = 0; i < promedio_presion; i++)
     {
         int lectura = 0;
@@ -118,9 +113,6 @@ float read_pin_presion(void)
         voltage_mv += lectura;
     }
     voltage_mv = voltage_mv / promedio_presion;
-    //adc_oneshot_read(sensor_presion_handle, pin_sensor_presion, &adc_raw);
-    //adc_cali_raw_to_voltage(sensor_presion_cali_handle, adc_raw, &voltage_mv);
-    // printf("Lectura ADC: %i, Voltaje calibrado: %imV\n", adc_raw, voltage_mv);
 
     if (voltage_mv > 367)
     {
