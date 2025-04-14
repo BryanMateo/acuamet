@@ -135,3 +135,4 @@ void LCD_clearScreen(void)
     LCD_writeByte(LCD_CLEAR, LCD_COMMAND);
     vTaskDelay(2 / portTICK_PERIOD_MS); // This command takes a while to complete
 }
+
