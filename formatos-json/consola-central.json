@@ -1,31 +1,27 @@
 [
     {
-    "id" : "id-generado-micro",
-    "cliente_id": "id de cliente asociado",
-    "ver": "version-del-codigo"
-},
-
-{
-    "id": "id-generado-micro",
-    "cliente_id": "id de cliente asociado",
-    "apt": "apto asociado a la metrica",
-    "consumo": "apto asociado a la metrica",
-    "fecha": "fecha actual"
-},
-
-{
-    "flujo_apt1": true,
-    "flujo_apt2": true,
-    "flujo_apt3": true,
-    "flujo_apt4": true,
-    "bomba": false
-},
-
-{
-    "valvula_apt1": true,
-    "valvula_apt2": true,
-    "valvula_apt3": true,
-    "valvula_apt4": true,
-    "bomba": false
-}
+        "id": "id-generado-micro",
+        "cliente_id": "id de cliente asociado",
+        "ver": "version-del-codigo"
+    },
+    {
+        "id": "id-generado-micro",
+        "cliente_id": "id de cliente asociado",
+        "apt": "apto asociado a la metrica",
+        "consumo": "apto asociado a la metrica",
+        "fecha": "fecha actual"
+    },
+    {
+        "valvula_apt1": true,
+        "valvula_apt2": true,
+        "valvula_apt3": true,
+        "valvula_apt4": true,
+        "bomba": false
+    },
+    {
+        "flujo_acumulado_apt1": 0,
+        "flujo_acumulado_apt2": 0,
+        "flujo_acumulado_apt3": 0,
+        "flujo_acumulado_apt4": 0
+    }
 ]

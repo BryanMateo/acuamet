@@ -63,7 +63,7 @@ function crear_topico_control(cliente_id, control_template) {
     mqttclient.publish(topico_control, mensaje, { qos: 1, retain: true }, (err) => {
         if (err) {
             console.error("Error al publicar:", err);
-        } 
+        }
     });
 }
 
@@ -78,21 +78,25 @@ mqttclient.on("message", (topic, message) => {
 
         db.query("SELECT * FROM clientes WHERE cliente_id = ?", [cliente_id], function (err, result) {
 
+            //Verificacion y actualizacion de los clientes con su llave de usuario
             if (err) {
                 console.error("Error al seleccionar:", err);
             } else if (result[0]) { //si existe va a verificar la llave
 
                 if (result[0].key_usuario != mensaje.key) { //si la llave no coincide la actualiza
                     db.query("UPDATE `clientes` SET `key_usuario` = ? WHERE `clientes`.`cliente_id` = ?", [mensaje.key, cliente_id], function (err, result) {
+                        console.log(result)
                         if (err) throw (err);
                         db.query("SELECT * FROM clientes WHERE cliente_id = ?", [cliente_id], function (err, result) {
                             if (err) throw (err);
                             var control_template = result[0].control;
-                            crear_topico_control(cliente_id, control_template);
+                            crear_topico_control(cliente_id, control_template); //Crea el topico de control, o vuelve a aplicar el control que este en la base de datos si ya existia
                         });
-                        
+
                     });
                 } else {
+                    //funcion que suma el resultado en la base de datos y envia 
+                    sumar_consumo(cliente_id);
                     //console.log(result[0]);
                 }
 
@@ -111,24 +115,29 @@ mqttclient.on("message", (topic, message) => {
         });
     }
 
-    // const expresionRegular = /\/([^\/]+)\//;
-    // const coincidencias = topico.match(expresionRegular);
-
-    // if (coincidencias && coincidencias[1]) {
-    //     const resultado = coincidencias[1];
-    //     console.log(resultado); // "48E72994F3E4"
-    // } else {
-    //     console.log("No se encontró una coincidencia.");
-    // }
-
-    //console.log('Topico: ', topic.toString(), 'Mensaje:', message.toString());
-    //console.log('Topico: ', topic.toString());
-
-    //let strMessage = message.toString();
-    //let objMessage = JSON.parse(message);
-    //console.log(strMessage);
-
-    // if (topic === "acuamet_mqtt/consola_cliente") {
-    //     console.log("topico correcto");
-    // } else console.log("topico incorrecto");
 })
+
+function sumar_consumo(cliente_id, mensaje) {
+
+    db.query("SELECT info FROM clientes WHERE cliente_id = ?", [cliente_id], function (err, result) {
+        if (err) throw (err);
+
+        if (result[0].info != null) {
+            const info = JSON.parse(result[0].info);
+            console.log(cliente_id, info, mensaje);
+            //const acum_apt1 = info.flujo_acumulado_apt1 + mensaje.flujo_apt1;
+        }
+
+    });
+
+    // db.query("UPDATE `clientes` SET `key_usuario` = ? WHERE `clientes`.`cliente_id` = ?", [mensaje.key, cliente_id], function (err, result) {
+    //     console.log(result)
+    //     if (err) throw (err);
+    //     db.query("SELECT * FROM clientes WHERE cliente_id = ?", [cliente_id], function (err, result) {
+    //         if (err) throw (err);
+    //         var control_template = result[0].control;
+    //         crear_topico_control(cliente_id, control_template); //Crea el topico de control, o vuelve a aplicar el control que este en la base de datos si ya existia
+    //     });
+    // });
+
+}
