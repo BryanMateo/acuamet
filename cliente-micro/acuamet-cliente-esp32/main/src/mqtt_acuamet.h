@@ -8,5 +8,8 @@ void mqtt5_app_start();
 void create_topics();
 
 esp_err_t pub_info_sensores_mqtt();
+esp_err_t pub_pedir_token_sesion_mqtt(bool req);
+
+extern char *token_sesion;
 
 #endif

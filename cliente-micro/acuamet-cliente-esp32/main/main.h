@@ -68,8 +68,11 @@ struct SALIDA
 struct FLAG
 {
     bool control;
+    bool wifi_cfg;
     bool wifi_connected;
+    bool mqtt_cfg;
     bool mqtt_connected;
+    bool token_asignado; // flag para indicar token de servidor asignado
 };
 
 extern struct SENSORES sensores;

@@ -4,7 +4,7 @@
 
 #define WIFI_CONNECTED_BIT BIT0
 #define WIFI_FAIL_BIT BIT1
-#define STORAGE_NAMESPACE "wifi_creds" // nvs name
+#define WIFI_NAMESPACE "wifi_creds" // nvs name
 #define SSID_KEY "ssid"                // nvs ssid
 #define PASSWORD_KEY "password"        // nvs wifi password
 #define KEY_KEY "key"                  // nvs key

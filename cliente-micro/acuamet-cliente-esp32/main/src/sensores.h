@@ -19,6 +19,13 @@ extern volatile uint64_t tiempo_inicio;
 extern volatile uint64_t tiempo_fin;
 extern volatile uint64_t duracion_pulso;
 
+#define FLUJO_NAMESPACE "flujos" // nvs name
+#define nvs_flujo_apt_1 "flujo_apt_1"
+#define nvs_flujo_apt_2 "flujo_apt_2"
+#define nvs_flujo_apt_3 "flujo_apt_3"
+#define nvs_flujo_apt_4 "flujo_apt_4"
+#define nvs_token "token"
+
 void set_pin_pcnt();      // establece la unidad contadora del flujometro
 float calc_galon_flujo(); // lee el contador del flujometro y devuelve los galones contados
 
@@ -26,5 +33,9 @@ void set_pin_presion();   // configura el pin para el sensor de presion
 float read_pin_presion(); // lee utilizando el adc el voltaje del sensor de presion y devuelve en PSI
 
 int nivel_cisterna_distance();
+
+void guardar_flujo_flash();
+void obtener_flujo_flash();
+void limpiar_flujo_flash();
 
 #endif

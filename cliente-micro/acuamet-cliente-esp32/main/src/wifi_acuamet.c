@@ -58,10 +58,10 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t e
 bool get_wifi_credentials(char *ssid, char *password, char *key, size_t max_len)
 {
     nvs_handle_t nvs_handle;
-    esp_err_t err = nvs_open(STORAGE_NAMESPACE, NVS_READONLY, &nvs_handle);
+    esp_err_t err = nvs_open(WIFI_NAMESPACE, NVS_READONLY, &nvs_handle);
     if (err != ESP_OK)
     {
-        ESP_LOGE(TAG, "No se pudo abrir NVS");
+        ESP_LOGE(TAG, "No se pudo abrir NVS get wifi");
         return false;
     }
 
@@ -99,7 +99,7 @@ bool get_wifi_credentials(char *ssid, char *password, char *key, size_t max_len)
 void save_wifi_credentials(const char *ssid, const char *password, const char *key)
 {
     nvs_handle_t nvs_handle;
-    esp_err_t err = nvs_open(STORAGE_NAMESPACE, NVS_READWRITE, &nvs_handle);
+    esp_err_t err = nvs_open(WIFI_NAMESPACE, NVS_READWRITE, &nvs_handle);
     if (err != ESP_OK)
     {
         ESP_LOGE(TAG, "No se pudo abrir NVS");

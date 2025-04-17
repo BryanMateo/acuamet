@@ -6,16 +6,7 @@ int ESTADO_ANTERIOR = EST_INIT;
 
 int fun_init(void)
 {
-    // Inicializacion de flags
-    flag.control = false;
-    flag.mqtt_connected = false;
-    flag.wifi_connected = false;
-
     ESP_LOGW(TAG, "Estado Init");
-
-    gpio_init();                                                             // Inicializar todos los GPIO
-    LCD_init(i2c_lcd_address, pin_lcd_sda, pin_lcd_scl, lcd_cols, lcd_rows); // Inicializa el LCD
-    obtener_mac();
 
     // Inicializacion de la nvs y parametros de wifi
     esp_err_t ret = nvs_flash_init();
@@ -29,24 +20,44 @@ int fun_init(void)
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     esp_wifi_init(&cfg);
 
+    obtener_mac();
+
+    gpio_init(); // Inicializar todos los GPIO
+
     valvulas_init(); // Inicializa las valvulas
 
+    LCD_init(i2c_lcd_address, pin_lcd_sda, pin_lcd_scl, lcd_cols, lcd_rows); // Inicializa el LCD
     LCD_home();
     LCD_clearScreen();
     LCD_writeStr("Acuamet");
     LCD_setCursor(0, 1);
     LCD_writeStr("v1.0");
 
+    obtener_flujo_flash(); // obtiene el token y el flujo anterior si estuvo offline
+
     while (1)
     {
         if (gpio_get_level(config_pin) == 0 || !nvs_init()) // modo config si no hay red guardada o pin config a gnd
         {
-            vTaskDelay(pdMS_TO_TICKS(3000));
+            vTaskDelay(pdMS_TO_TICKS(1000));
             return EST_CONFIG;
         }
         else
         {
-            return EST_WIFICONN;
+            if (!flag.wifi_cfg) // configura una sola vez el wifi
+            {
+                wifi_init_sta();
+                flag.wifi_cfg = true;
+            }
+
+            if (!flag.mqtt_cfg) // configura una sola vez el cliente mqtt
+            {
+                create_topics(); // funcion que crea los strings de topicos con el numero de serie del ESP
+                mqtt5_app_start();
+                flag.mqtt_cfg = true;
+            }
+
+            return EST_MQTTCONN;
         }
         vTaskDelay(pdMS_TO_TICKS(delay_estados));
     }
@@ -100,17 +111,46 @@ int fun_mqttconn(void)
     ESP_LOGW(TAG, "Estado MQTTconn");
     ESTADO_ANTERIOR = ESTADO_ACTUAL;
     ESTADO_ACTUAL = EST_MQTTCONN;
-    create_topics(); // funcion que crea el string de topicos con el numero de serie del ESP
-    mqtt5_app_start();
 
     while (1)
     {
-        if (flag.mqtt_connected)
-        {
-            return EST_ONLINE;
-        }
+        // switch (ESTADO_ANTERIOR)
+        // {
+        // case EST_INIT:
 
-        vTaskDelay(pdMS_TO_TICKS(delay_estados));
+        //     break;
+
+        // default:
+        //     break;
+        // }
+
+        if (flag.wifi_connected && flag.mqtt_connected)
+        {
+
+            if (token_sesion != NULL) // si hay un token en la nvs
+            {
+                pub_info_sensores_mqtt(); // se mantendra actualizando el flujo del token anterior mientras no haya recibido uno nuevo
+            }
+
+            if (!flag.token_asignado)
+            {
+                pub_pedir_token_sesion_mqtt(true);
+                // vTaskDelay(pdMS_TO_TICKS(1000)); // tiempo de espera de 5 seg para recibir token
+            }
+            else // recibio token nuevo
+            {
+                sensores.flujo_apt1 = 0;
+                sensores.flujo_apt2 = 0;
+                sensores.flujo_apt3 = 0;
+                sensores.flujo_apt4 = 0;
+                pub_pedir_token_sesion_mqtt(false);
+                return EST_ONLINE;
+            }
+        }
+        else
+            return EST_OFFLINE;
+
+        vTaskDelay(pdMS_TO_TICKS(delay_estado_mqttconn));
     }
 }
 
@@ -124,15 +164,19 @@ int fun_online(void)
     LCD_writeStr("Online");
     while (1)
     {
-        if (flag.wifi_connected & flag.mqtt_connected)
+        if (flag.wifi_connected && flag.mqtt_connected)
         {
             esp_err_t err = pub_info_sensores_mqtt();
-            if (err != ESP_OK)
+            if (err == ESP_OK)
             {
-                // printf("Sensores publicados \n");
+                printf("Sensores publicados \n");
             }
         }
-
+        else
+        {
+            printf("no wifi o mqtt \n");
+            return EST_OFFLINE;
+        }
         vTaskDelay(pdMS_TO_TICKS(delay_estado_online));
     }
 }
@@ -148,7 +192,22 @@ int fun_offline(void)
 
     while (1)
     {
-        vTaskDelay(pdMS_TO_TICKS(delay_estados));
+        if (flag.wifi_connected && flag.mqtt_connected)
+        {
+            if (!flag.token_asignado)
+            {
+                return EST_MQTTCONN;
+            }
+            else
+            {
+                limpiar_flujo_flash();
+                return EST_ONLINE;
+            }
+        }
+        else
+            guardar_flujo_flash();
+
+        vTaskDelay(pdMS_TO_TICKS(delay_estado_offline));
     }
 }
 

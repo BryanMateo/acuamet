@@ -54,11 +54,6 @@ void fsm_task(void *pvParameters)
 
 void flujo_presion_task(void *pvParameters)
 {
-    sensores.flujo_apt1 = 0;
-    sensores.flujo_apt2 = 0;
-    sensores.flujo_apt3 = 0;
-    sensores.flujo_apt4 = 0;
-    sensores.presion = 0;
 
     while (1)
     {
@@ -72,7 +67,7 @@ void flujo_presion_task(void *pvParameters)
             sensores.presion = read_pin_presion();
 
             // printf("1: %.2f 2: %.2f 3: %.2f 4: %.2f \n", sensores.flujo_apt1, sensores.flujo_apt2, sensores.flujo_apt3, sensores.flujo_apt4);
-            // printf("Presion = %.2fPSI \n", sensores.presion);
+            //  printf("Presion = %.2fPSI \n", sensores.presion);
         }
         vTaskDelay(pdMS_TO_TICKS(delay_lectura_flujometros));
     }
@@ -124,6 +119,21 @@ void salidas_task(void *pvParameters)
 
 void app_main(void)
 {
+    // Inicializacion de flags
+    flag.control = false;
+    flag.wifi_cfg = false;
+    flag.wifi_connected = false;
+    flag.mqtt_cfg = false;
+    flag.mqtt_connected = false;
+    flag.token_asignado = false;
+
+    // Inicializacion de contadores y sensores
+    sensores.flujo_apt1 = 0;
+    sensores.flujo_apt2 = 0;
+    sensores.flujo_apt3 = 0;
+    sensores.flujo_apt4 = 0;
+    sensores.presion = 0;
+
     xTaskCreate(
         fsm_task,
         "fsm",

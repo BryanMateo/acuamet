@@ -13,7 +13,9 @@
 #define EST_ERROR 7
 
 #define delay_estados 100
+#define delay_estado_mqttconn 1000
 #define delay_estado_online 1000
+#define delay_estado_offline 5000
 
 extern int ESTADO_SIGUIENTE;
 extern int ESTADO_ACTUAL;
