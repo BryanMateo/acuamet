@@ -26,13 +26,6 @@ int fun_init(void)
 
     valvulas_init(); // Inicializa las valvulas
 
-    LCD_init(i2c_lcd_address, pin_lcd_sda, pin_lcd_scl, lcd_cols, lcd_rows); // Inicializa el LCD
-    LCD_home();
-    LCD_clearScreen();
-    LCD_writeStr("Acuamet");
-    LCD_setCursor(0, 1);
-    LCD_writeStr("v1.0");
-
     obtener_flujo_flash(); // obtiene el token y el flujo anterior si estuvo offline
 
     while (1)
@@ -67,20 +60,8 @@ int fun_config(void)
 {
     ESP_LOGW(TAG, "Estado Config");
     ESTADO_ANTERIOR = ESTADO_ACTUAL;
-    ESTADO_ACTUAL = EST_CONFIG;
     config();
-
-    LCD_home();
-    LCD_clearScreen();
-    LCD_writeStr("Config mode");
-    LCD_setCursor(0, 1);
-    LCD_writeStr("Wf: ");
-    LCD_setCursor(4, 1);
-    LCD_writeStr(ap_ssid);
-    LCD_setCursor(0, 2);
-    LCD_writeStr("Pwd: ");
-    LCD_setCursor(5, 2);
-    LCD_writeStr("acuametcfg1");
+    ESTADO_ACTUAL = EST_CONFIG;
 
     while (1)
     {
@@ -114,23 +95,8 @@ int fun_mqttconn(void)
 
     while (1)
     {
-        // switch (ESTADO_ANTERIOR)
-        // {
-        // case EST_INIT:
-
-        //     break;
-
-        // default:
-        //     break;
-        // }
-
         if (flag.wifi_connected && flag.mqtt_connected)
         {
-
-            if (token_sesion != NULL) // si hay un token en la nvs
-            {
-                pub_info_sensores_mqtt(); // se mantendra actualizando el flujo del token anterior mientras no haya recibido uno nuevo
-            }
 
             if (!flag.token_asignado)
             {
@@ -139,6 +105,7 @@ int fun_mqttconn(void)
             }
             else // recibio token nuevo
             {
+                pub_info_sensores_mqtt();
                 sensores.flujo_apt1 = 0;
                 sensores.flujo_apt2 = 0;
                 sensores.flujo_apt3 = 0;
@@ -159,9 +126,8 @@ int fun_online(void)
     ESP_LOGW(TAG, "Estado Online");
     ESTADO_ANTERIOR = ESTADO_ACTUAL;
     ESTADO_ACTUAL = EST_ONLINE;
-    LCD_home();
-    LCD_clearScreen();
-    LCD_writeStr("Online");
+    limpiar_flujo_flash();
+
     while (1)
     {
         if (flag.wifi_connected && flag.mqtt_connected)
@@ -169,7 +135,7 @@ int fun_online(void)
             esp_err_t err = pub_info_sensores_mqtt();
             if (err == ESP_OK)
             {
-                printf("Sensores publicados \n");
+                ESP_LOGI(TAG, "Sensores publicados");
             }
         }
         else
@@ -186,9 +152,6 @@ int fun_offline(void)
     ESP_LOGW(TAG, "Estado Offline");
     ESTADO_ANTERIOR = ESTADO_ACTUAL;
     ESTADO_ACTUAL = EST_OFFLINE;
-    LCD_home();
-    LCD_clearScreen();
-    LCD_writeStr("Offline");
 
     while (1)
     {
@@ -200,7 +163,7 @@ int fun_offline(void)
             }
             else
             {
-                limpiar_flujo_flash();
+                // limpiar_flujo_flash();
                 return EST_ONLINE;
             }
         }

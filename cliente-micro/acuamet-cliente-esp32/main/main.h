@@ -44,7 +44,16 @@
 #define delay_lectura_flujometros 1000
 #define delay_lectura_cisterna 1000
 #define delay_salidas_task 1000
+#define delay_lcd_task 500
 extern const char *TAG;
+
+struct CONTADORES
+{
+    int apt_1;
+    int apt_2;
+    int apt_3;
+    int apt_4;
+};
 
 struct SENSORES
 {
@@ -75,6 +84,7 @@ struct FLAG
     bool token_asignado; // flag para indicar token de servidor asignado
 };
 
+extern struct CONTADORES contadores;
 extern struct SENSORES sensores;
 extern struct SALIDA salida;
 extern struct FLAG flag;

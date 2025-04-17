@@ -140,7 +140,7 @@ char *sensores_json()
         // ESP_LOGE("JSON", "Error al crear objeto JSON");
         return NULL;
     }
-
+    
     cJSON_AddStringToObject(root, "key", key);
     cJSON_AddStringToObject(root, "ssid", ssid);
     cJSON_AddStringToObject(root, "token", token_sesion);

@@ -2,9 +2,11 @@
 
 const char *TAG = "cliente_acuamet";
 
+struct CONTADORES contadores;
 struct SENSORES sensores;
 struct SALIDA salida;
 struct FLAG flag;
+
 
 void fsm_task(void *pvParameters)
 {
@@ -117,6 +119,48 @@ void salidas_task(void *pvParameters)
     }
 }
 
+void lcd_task(void *pvParameters)
+{
+    LCD_init(i2c_lcd_address, pin_lcd_sda, pin_lcd_scl, lcd_cols, lcd_rows); // Inicializa el LCD
+    while (1)
+    {
+        LCD_home();
+        LCD_clearScreen();
+        switch (ESTADO_ACTUAL)
+        {
+        case EST_INIT:
+            LCD_writeStr("Acuamet");
+            LCD_setCursor(0, 1);
+            LCD_writeStr("v1.0");
+            break;
+
+        case EST_CONFIG:
+            LCD_writeStr("Config mode");
+            LCD_setCursor(0, 1);
+            LCD_writeStr("Wf: ");
+            LCD_setCursor(4, 1);
+            LCD_writeStr(ap_ssid);
+            LCD_setCursor(0, 2);
+            LCD_writeStr("Pwd: ");
+            LCD_setCursor(5, 2);
+            LCD_writeStr("acuametcfg1");
+            break;
+
+        case EST_ONLINE:
+            LCD_writeStr("Online");
+            break;
+
+        case EST_OFFLINE:
+            LCD_writeStr("Offline");
+            break;
+        default:
+            break;
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(delay_lcd_task));
+    }
+}
+
 void app_main(void)
 {
     // Inicializacion de flags
@@ -133,6 +177,13 @@ void app_main(void)
     sensores.flujo_apt3 = 0;
     sensores.flujo_apt4 = 0;
     sensores.presion = 0;
+
+    token_sesion = "null";
+
+    contadores.apt_1 = 0;
+    contadores.apt_2 = 0;
+    contadores.apt_3 = 0;
+    contadores.apt_4 = 0;
 
     xTaskCreate(
         fsm_task,
@@ -160,6 +211,14 @@ void app_main(void)
 
     xTaskCreate(
         salidas_task,
+        "salidas",
+        4096,
+        NULL,
+        5,
+        NULL);
+
+    xTaskCreate(
+        lcd_task,
         "salidas",
         4096,
         NULL,

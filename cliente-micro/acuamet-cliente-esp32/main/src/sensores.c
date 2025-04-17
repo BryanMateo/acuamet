@@ -30,7 +30,7 @@ float calc_galon_flujo(pcnt_unit_t unit) // lee el contador del flujometro y dev
     {
         pcnt_counter_clear(unit);
     }
-    float galones_flujo = (float)pulsos_flujo / constante_gpl_flujometro;
+    float galones_flujo = (float)pulsos_flujo / constante_ppg_flujometro;
 
     return galones_flujo;
 }
@@ -68,8 +68,8 @@ void guardar_flujo_flash() // funcion para guardar flujo acumulado en la flash e
         memcpy(&apt3, &sensores.flujo_apt3, sizeof(sensores.flujo_apt3));
         memcpy(&apt4, &sensores.flujo_apt4, sizeof(sensores.flujo_apt4));
 
-        if (token_sesion != NULL)
-            nvs_set_str(nvs_handle, nvs_token, token_sesion);
+        // if (token_sesion != NULL)
+        //     nvs_set_str(nvs_handle, nvs_token, token_sesion);
 
         nvs_set_u32(nvs_handle, nvs_flujo_apt_1, apt1);
         nvs_set_u32(nvs_handle, nvs_flujo_apt_2, apt2);
@@ -135,13 +135,13 @@ void obtener_flujo_flash() // obtiene los flujos y token de la sesion anterior
     uint32_t apt3 = 0;
     uint32_t apt4 = 0;
 
-    size_t longitud = 0;
-    err = nvs_get_str(nvs_handle, nvs_token, NULL, &longitud); // Obtener tamaño de el token en flash
-    if (err == ESP_OK)
-    {
-        token_sesion = malloc(longitud);
-        err = nvs_get_str(nvs_handle, nvs_token, token_sesion, &longitud);
-    }
+    // size_t longitud = 0;
+    // err = nvs_get_str(nvs_handle, nvs_token, NULL, &longitud); // Obtener tamaño de el token en flash
+    // if (err == ESP_OK)
+    // {
+    //     token_sesion = malloc(longitud);
+    //     err = nvs_get_str(nvs_handle, nvs_token, token_sesion, &longitud);
+    // }
 
     nvs_get_u32(nvs_handle, nvs_flujo_apt_1, &apt1);
     nvs_get_u32(nvs_handle, nvs_flujo_apt_2, &apt2);
@@ -152,6 +152,8 @@ void obtener_flujo_flash() // obtiene los flujos y token de la sesion anterior
     memcpy(&sensores.flujo_apt2, &apt2, sizeof(float));
     memcpy(&sensores.flujo_apt3, &apt3, sizeof(float));
     memcpy(&sensores.flujo_apt4, &apt4, sizeof(float));
+
+    printf("Valores en nvs 1: %.3f, 2: %.3f, 3: %.3f, 4: %.3f \n", sensores.flujo_apt1, sensores.flujo_apt2, sensores.flujo_apt3, sensores.flujo_apt4);
 
     nvs_close(nvs_handle);
 }
@@ -165,7 +167,7 @@ void limpiar_flujo_flash()
     nvs_erase_key(nvs_handle, nvs_flujo_apt_2);
     nvs_erase_key(nvs_handle, nvs_flujo_apt_3);
     nvs_erase_key(nvs_handle, nvs_flujo_apt_4);
-    nvs_erase_key(nvs_handle, nvs_token);
+    // nvs_erase_key(nvs_handle, nvs_token);
 
     nvs_commit(nvs_handle);
     nvs_close(nvs_handle);

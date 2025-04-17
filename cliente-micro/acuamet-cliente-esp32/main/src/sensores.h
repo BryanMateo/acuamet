@@ -2,8 +2,8 @@
 #define SENSORES_H
 #include "../main.h"
 
-#define constante_ppl_flujometro 450
-#define constante_gpl_flujometro 1703
+#define constante_ppl_flujometro 450      // pulsos por litro
+#define constante_ppg_flujometro 1703.000 // pulsos por galon
 
 #define pcnt_unit_flujo_1 PCNT_UNIT_0
 #define pcnt_unit_flujo_2 PCNT_UNIT_1
