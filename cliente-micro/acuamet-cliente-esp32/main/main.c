@@ -7,7 +7,6 @@ struct SENSORES sensores;
 struct SALIDA salida;
 struct FLAG flag;
 
-
 void fsm_task(void *pvParameters)
 {
     while (1)
@@ -126,15 +125,18 @@ void lcd_task(void *pvParameters)
     {
         LCD_home();
         LCD_clearScreen();
+
         switch (ESTADO_ACTUAL)
         {
         case EST_INIT:
+
             LCD_writeStr("Acuamet");
             LCD_setCursor(0, 1);
             LCD_writeStr("v1.0");
             break;
 
         case EST_CONFIG:
+
             LCD_writeStr("Config mode");
             LCD_setCursor(0, 1);
             LCD_writeStr("Wf: ");
@@ -147,12 +149,37 @@ void lcd_task(void *pvParameters)
             break;
 
         case EST_ONLINE:
-            LCD_writeStr("Online");
+
+            char acum[7];
+            sprintf(acum, "%.1f", contadores.apt_1);
+            LCD_writeStr("Apt.1");
+            LCD_setCursor(0, 1);
+            LCD_writeStr(acum);
+
+            sprintf(acum, "%.1f", contadores.apt_2);
+            LCD_setCursor(0, 2);
+            LCD_writeStr("Apt.2");
+            LCD_setCursor(0, 3);
+            LCD_writeStr(acum);
+
+            sprintf(acum, "%.1f", contadores.apt_3);
+            LCD_setCursor(7, 0);
+            LCD_writeStr("Apt.3");
+            LCD_setCursor(7, 1);
+            LCD_writeStr(acum);
+
+            sprintf(acum, "%.1f", contadores.apt_4);
+            LCD_setCursor(7, 2);
+            LCD_writeStr("Apt.4");
+            LCD_setCursor(7, 3);
+            LCD_writeStr(acum);
             break;
 
         case EST_OFFLINE:
+
             LCD_writeStr("Offline");
             break;
+
         default:
             break;
         }

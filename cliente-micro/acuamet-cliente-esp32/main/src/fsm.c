@@ -135,7 +135,7 @@ int fun_online(void)
             esp_err_t err = pub_info_sensores_mqtt();
             if (err == ESP_OK)
             {
-                ESP_LOGI(TAG, "Sensores publicados");
+               // ESP_LOGI(TAG, "Sensores publicados");
             }
         }
         else

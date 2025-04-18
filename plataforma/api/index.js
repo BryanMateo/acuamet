@@ -162,7 +162,7 @@ function sumar_consumo(cliente_id, mensaje) {
                         });
                         pub_consumo_acum(cliente_id, acum_apt1, acum_apt2, acum_apt3, acum_apt4);
                     });
-                    
+
 
                 } else console.log("Consumo igual mismo token");
 
@@ -188,11 +188,19 @@ function sumar_consumo(cliente_id, mensaje) {
                     });
                     pub_consumo_acum(cliente_id, acum_apt1, acum_apt2, acum_apt3, acum_apt4);
 
-                } else console.log("Consumo igual no es mismo token");
+                } else {
+                    db.query("UPDATE `cliente_consumos_anterior` SET `token_sesion` = ?, `apt1` = ?, `apt2` = ?, `apt3` = ?, `apt4` = ? WHERE `cliente_id` = ?", [mensaje.token, mensaje.flujo_apt_1, mensaje.flujo_apt_2, mensaje.flujo_apt_3, mensaje.flujo_apt_4, cliente_id], function (err, result) {
+                        if (err) throw (err);
+                        console.log("Token nuevo y consumo anterior al nuevo");
+                    });
+                    console.log("Consumo igual no es mismo token")
+                };
             }
 
         } else console.log("Cons anterior no encontrado");
+
     });
+
 }
 
 function pub_consumo_acum(cliente_id, apt1, apt2, apt3, apt4) {
@@ -206,7 +214,7 @@ function pub_consumo_acum(cliente_id, apt1, apt2, apt3, apt4) {
     const topico_acum = sprintf("acuamet/%s/acum", cliente_id);
     const mensaje = JSON.stringify(acumulado);
 
-    mqttclient.publish(topico_acum, mensaje, { qos: 0, retain: true }, (err) => {
+    mqttclient.publish(topico_acum, mensaje, { qos: 1, retain: true }, (err) => {
         if (err) {
             console.error("Error al publicar acumulado:", err);
         }

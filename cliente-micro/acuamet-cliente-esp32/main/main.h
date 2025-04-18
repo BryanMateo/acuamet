@@ -44,15 +44,15 @@
 #define delay_lectura_flujometros 1000
 #define delay_lectura_cisterna 1000
 #define delay_salidas_task 1000
-#define delay_lcd_task 500
+#define delay_lcd_task 1000
 extern const char *TAG;
 
 struct CONTADORES
 {
-    int apt_1;
-    int apt_2;
-    int apt_3;
-    int apt_4;
+    float apt_1;
+    float apt_2;
+    float apt_3;
+    float apt_4;
 };
 
 struct SENSORES

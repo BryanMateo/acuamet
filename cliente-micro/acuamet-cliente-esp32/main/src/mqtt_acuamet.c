@@ -2,6 +2,7 @@
 
 char client_root_topic[22] = "";      // base de los topicos - cliente_id
 char client_info_topic[27] = "";      // topico de informacion de sensores
+char client_acum_topic[27] = "";      // topico de consumo acumulado
 char client_req_token_topic[32] = ""; // topico para solicitar token
 char client_res_token_topic[32] = ""; // topico donde se recibe el token de la sesion actual de contabilizacion de consumo
 char client_control_topic[30] = "";   // topico de control
@@ -20,6 +21,8 @@ static void mqtt5_event_handler(void *handler_args, esp_event_base_t base, int32
     case MQTT_EVENT_CONNECTED:
         esp_mqtt_client_subscribe(client, client_control_topic, 1);
         esp_mqtt_client_subscribe(client, client_res_token_topic, 1);
+        esp_mqtt_client_subscribe(client, client_acum_topic, 1);
+
         flag.mqtt_connected = true;
         break;
 
@@ -71,7 +74,7 @@ static void mqtt5_event_handler(void *handler_args, esp_event_base_t base, int32
             flag.control = true;
         }
 
-        if (strncmp(event->topic, client_res_token_topic, event->topic_len) == 0 && !flag.token_asignado) // topico de token de sesion
+        else if (strncmp(event->topic, client_res_token_topic, event->topic_len) == 0 && !flag.token_asignado) // topico de token de sesion
         {
             char *data = strndup(event->data, event->data_len);
             // printf("token topic: %s \n", data);
@@ -96,6 +99,48 @@ static void mqtt5_event_handler(void *handler_args, esp_event_base_t base, int32
             cJSON_Delete(json);
             free(data);
             flag.token_asignado = true;
+        }
+
+        else if (strncmp(event->topic, client_acum_topic, event->topic_len) == 0) // topico de consumo acumulado
+        {
+
+            char *data = strndup(event->data, event->data_len);
+            // printf("acum topic: %s \n", data);
+
+            cJSON *json = cJSON_Parse(data);
+            if (json == NULL)
+            {
+                const char *error_ptr = cJSON_GetErrorPtr();
+                if (error_ptr != NULL)
+                {
+                    fprintf(stderr, "Error antes de: %s\n", error_ptr);
+                }
+                break;
+            }
+            cJSON *item = cJSON_GetObjectItemCaseSensitive(json, "acum_apt1");
+            if (cJSON_IsNumber(item))
+            {
+                printf("INT %i, FLOAT %f \n", item->valueint, item->valuedouble);
+                contadores.apt_1 = item->valuedouble;
+            }
+            item = cJSON_GetObjectItemCaseSensitive(json, "acum_apt2");
+            if (cJSON_IsNumber(item))
+            {
+                contadores.apt_2 = item->valuedouble;
+            }
+            item = cJSON_GetObjectItemCaseSensitive(json, "acum_apt3");
+            if (cJSON_IsNumber(item))
+            {
+                contadores.apt_3 = item->valuedouble;
+            }
+            item = cJSON_GetObjectItemCaseSensitive(json, "acum_apt4");
+            if (cJSON_IsNumber(item))
+            {
+                contadores.apt_4 = item->valuedouble;
+            }
+
+            cJSON_Delete(json);
+            free(data);
         }
 
         break;
@@ -129,6 +174,7 @@ void create_topics(void)
     sprintf(client_info_topic, "%s/info", client_root_topic);           // topico de informacion solo PUB
     sprintf(client_req_token_topic, "%s/token/req", client_root_topic); // topico de token de sesion solo PUB
     sprintf(client_res_token_topic, "%s/token/res", client_root_topic); // topico de token de sesion solo SUB
+    sprintf(client_acum_topic, "%s/acum", client_root_topic);           // topico de acumulado solo SUB
     sprintf(client_control_topic, "%s/control", client_root_topic);     // topico de control solo SUB
 }
 
@@ -140,7 +186,7 @@ char *sensores_json()
         // ESP_LOGE("JSON", "Error al crear objeto JSON");
         return NULL;
     }
-    
+
     cJSON_AddStringToObject(root, "key", key);
     cJSON_AddStringToObject(root, "ssid", ssid);
     cJSON_AddStringToObject(root, "token", token_sesion);
