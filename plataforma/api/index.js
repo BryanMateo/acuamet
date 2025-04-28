@@ -11,8 +11,36 @@ const PORT = 3000;
 const expressApp = createExpressServer();
 expressApp.listen(PORT, () =>
     console.log(`Servidor en puerto ${PORT}`)
-
 );
+
+expressApp.get('/api/encender', (req, res) => {
+    const cliente_id = req.query.cliente_id;
+    const target = req.query.target;
+
+    console.log('Cliente ID:', cliente_id);
+    console.log('Target:', target);
+
+    encender(cliente_id, target);
+    // console.log(req);
+
+    // Aquí haces lo que necesites (ejemplo, activar una válvula)
+
+    res.json({ message: `Target ${target} del cliente ${cliente_id} activada.` });
+});
+
+expressApp.get('/api/apagar', (req, res) => {
+    const cliente_id = req.query.cliente_id;
+    const target = req.query.target;
+
+    console.log('Cliente ID:', cliente_id);
+    console.log('Target:', target);
+    apagar(cliente_id, target);
+    // console.log(req);
+
+    // Aquí haces lo que necesites (ejemplo, activar una válvula)
+
+    res.json({ message: `Target ${target} del cliente ${cliente_id} activada.` });
+});
 
 //                              mysql
 var db = mysql.createConnection({
@@ -56,8 +84,6 @@ mqttclient.on("message", (topic, message) => {
         }
     }
 })
-
-
 
 //                              funciones
 
@@ -219,4 +245,97 @@ function pub_consumo_acum(cliente_id, apt1, apt2, apt3, apt4) {
             console.error("Error al publicar acumulado:", err);
         }
     });
+}
+
+function encender(cliente_id, target) {
+
+    db.query("SELECT * FROM clientes WHERE cliente_id = ?", [cliente_id], function (err, result) {
+
+        //Verificacion y actualizacion de los clientes con su llave de usuario
+        if (err) {
+            console.error("Error al seleccionar:", err);
+        } else if (result[0]) {
+            const control = JSON.parse(result[0].control);
+            switch (target) {
+                case "Apt1":
+                    control.valvula_apt1 = true;
+                    break;
+                case "Apt2":
+                    control.valvula_apt2 = true;
+                    break;
+                case "Apt3":
+                    control.valvula_apt3 = true;
+                    break;
+                case "Apt4":
+                    control.valvula_apt4 = true;
+                    break;
+                case "Bomba":
+                    control.bomba = true;
+                    break;
+                default:
+                    break;
+            }
+
+            const control_template = JSON.stringify(control);
+            console.log(control_template);
+
+            db.query("UPDATE `clientes` SET `control` = ? WHERE `clientes`.`cliente_id` = ?", [control_template, cliente_id], function (err, result) {
+                console.log(result)
+                if (err) throw (err);
+                db.query("SELECT control FROM clientes WHERE cliente_id = ?", [cliente_id], function (err, result) {
+                    if (err) throw (err);
+                    var control_template = result[0].control;
+                    crear_topico_control(cliente_id, control_template); //Crea el topico de control, o vuelve a aplicar el control que este en la base de datos si ya existia
+                });
+            });
+        }
+    });
+
+}
+
+function apagar(cliente_id, valvula) {
+
+    db.query("SELECT * FROM clientes WHERE cliente_id = ?", [cliente_id], function (err, result) {
+
+        //Verificacion y actualizacion de los clientes con su llave de usuario
+        if (err) {
+            console.error("Error al seleccionar:", err);
+        } else if (result[0]) {
+            const control = JSON.parse(result[0].control);
+            switch (valvula) {
+                case "Apt1":
+                    control.valvula_apt1 = false;
+                    break;
+                case "Apt2":
+                    control.valvula_apt2 = false;
+                    break;
+                case "Apt3":
+                    control.valvula_apt3 = false;
+                    break;
+                case "Apt4":
+                    control.valvula_apt4 = false;
+                    break;
+                case "Bomba":
+                    control.bomba = false;
+                    break;
+                default:
+                    break;
+            }
+
+            const control_template = JSON.stringify(control);
+            console.log(control_template)
+
+
+            db.query("UPDATE `clientes` SET `control` = ? WHERE `clientes`.`cliente_id` = ?", [control_template, cliente_id], function (err, result) {
+                // console.log(result);
+                if (err) throw (err);
+                db.query("SELECT control FROM clientes WHERE cliente_id = ?", [cliente_id], function (err, result) {
+                    if (err) throw (err);
+                    var control_template = result[0].control;
+                    crear_topico_control(cliente_id, control_template); //Crea el topico de control, o vuelve a aplicar el control que este en la base de datos si ya existia
+                });
+            });
+        }
+    });
+
 }

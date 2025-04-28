@@ -80,8 +80,7 @@ include "layouts/head.php";     ?>
 <!--==========================================-->
 
 <!-- ============= | MODALS | =============== -->
-<?php include 'modals/create/Mcategoria.php';
-	  include 'modals/update/Mcategoria.php';
+<?php include 'modals/Mclientes.php';
 ?>
 
 
