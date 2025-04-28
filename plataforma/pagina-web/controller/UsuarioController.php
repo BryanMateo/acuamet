@@ -1,7 +1,7 @@
 <?php 
 session_start();
-require "../model/Usuario.php";
-
+// require "../model/Usuario.php";
+require(__DIR__ . '/../model/Usuario.php');
 $usu = new Usuario();
 
 switch($_REQUEST["operador"]){

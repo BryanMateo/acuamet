@@ -1,6 +1,7 @@
 <?php
 
 require "../model/Categoria.php";
+// require(__DIR__ . '/../model/Categoria.php');
 
 $cat = new Categoria();
 
@@ -12,8 +13,7 @@ switch($_REQUEST["operador"]){
         if($datos){
             for($i=0; $i<count($datos); $i++){
                 $list[] = array (
-                    "op"=>($datos[$i]['estado']==1)?
-                            '<div class="btn-group">
+                    "op"=>'<div class="btn-group">
                                 <button class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" 
                                     aria-haspopup="true" aria-expanded="true"><i class="icon-gear"></i>
                                 </button>

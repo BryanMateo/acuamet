@@ -1,6 +1,8 @@
 <?php
 
-require "../model/SubCategoria.php";
+// require "../model/SubCategoria.php";
+require(__DIR__ . '/../model/SubCategoria.php');
+
 
 $subcat = new SubCategoria();
 

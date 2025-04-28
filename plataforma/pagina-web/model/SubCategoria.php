@@ -1,6 +1,7 @@
 <?php 
 
-require "../config/Conexion.php";
+//  require "../config/Conexion.php";
+require(__DIR__ . '/../config/Conexion.php');
 
 class SubCategoria {
 
